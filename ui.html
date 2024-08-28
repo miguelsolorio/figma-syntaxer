@@ -1,6 +1,15 @@
+<div id="theme-selector">
+  <select id="theme-dropdown">
+    <option value="prism">Default</option>
+    <option value="prism-dark">Dark</option>
+    <option value="prism-okaidia">Okaidia</option>
+    <option value="prism-twilight">Twilight</option>
+    <option value="prism-coy">Coy</option>
+  </select>
+</div>
 <div id="code-container"></div>
 
-<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+<link id="prism-theme" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
 
 <style>
   * {
@@ -19,6 +28,15 @@
   #code-container pre {
     margin: 0;
     padding: 20px;
+  }
+  #theme-selector {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+  }
+  #theme-dropdown {
+    width: 100%;
+    padding: 5px;
   }
 </style>
 
@@ -57,6 +75,28 @@ function highlightCode(code) {
   }
 }
 
+function changeTheme(theme) {
+  const linkElement = document.getElementById('prism-theme');
+  linkElement.href = `https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/${theme}.min.css`;
+  localStorage.setItem('prismTheme', theme);
+  
+  // Re-highlight the code with the new theme
+  const codeElement = document.querySelector('#code-container pre code');
+  if (codeElement && typeof Prism !== 'undefined') {
+    Prism.highlightElement(codeElement);
+    
+    // Recalculate dimensions and resize
+    const codeContainer = document.getElementById('code-container');
+    const width = codeContainer.scrollWidth;
+    const height = codeContainer.scrollHeight;
+    parent.postMessage({ pluginMessage: { type: 'resize', width, height } }, '*');
+  }
+}
+
+document.getElementById('theme-dropdown').addEventListener('change', (event) => {
+  changeTheme(event.target.value);
+});
+
 onmessage = (event) => {
   const msg = event.data.pluginMessage;
   
@@ -71,6 +111,14 @@ async function initPlugin() {
   try {
     await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js');
     await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js');
+    
+    // Load saved theme from localStorage
+    const savedTheme = localStorage.getItem('prismTheme');
+    if (savedTheme) {
+      document.getElementById('theme-dropdown').value = savedTheme;
+      changeTheme(savedTheme);
+    }
+    
     parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
   } catch (error) {
     console.error('Failed to load Prism:', error);
