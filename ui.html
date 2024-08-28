@@ -1,18 +1,24 @@
-<h2>Syntax Highlighter</h2>
 <div id="code-container"></div>
 
-<link href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
 
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
   body {
+    margin: 0;
+    padding: 0;
     font-family: sans-serif;
-    padding: 20px;
   }
   #code-container {
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    padding: 10px;
     white-space: pre-wrap;
+  }
+  #code-container pre {
+    margin: 0;
+    padding: 20px;
   }
 </style>
 
@@ -42,6 +48,10 @@ function highlightCode(code) {
   codeContainer.innerHTML = `<pre><code class="language-javascript">${escapedCode}</code></pre>`;
   if (typeof Prism !== 'undefined') {
     Prism.highlightAll();
+    // After highlighting, calculate dimensions and resize
+    const width = codeContainer.scrollWidth; // Add some padding
+    const height = codeContainer.scrollHeight; // Add padding for header
+    parent.postMessage({ pluginMessage: { type: 'resize', width, height } }, '*');
   } else {
     console.error('Prism is not defined');
   }
@@ -59,8 +69,8 @@ onmessage = (event) => {
 
 async function initPlugin() {
   try {
-    await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.24.1/prism.min.js');
-    await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.24.1/components/prism-javascript.min.js');
+    await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js');
+    await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js');
     parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
   } catch (error) {
     console.error('Failed to load Prism:', error);

@@ -6,7 +6,7 @@
 // full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__, { width: 300, height: 300 }); // Fixed height, initial width
+figma.showUI(__html__, { width: 300, height: 300 }); // Initial size
 
 function checkSelection() {
   const selection = figma.currentPage.selection;
@@ -24,12 +24,20 @@ checkSelection();
 
 figma.on('selectionchange', checkSelection);
 
-figma.ui.onmessage = (msg: { type: string; width?: number }) => {
+figma.ui.onmessage = (msg: { type: string; width?: number; height?: number }) => {
   if (msg.type === 'init') {
-    // Instead of calling a non-existent function, we'll check the selection again
     checkSelection();
-  } else if (msg.type === 'resize') {
-    // Resize the plugin window based on the content width
-    figma.ui.resize(msg.width || 300, 300);
+  } else if (msg.type === 'resize' && msg.width !== undefined && msg.height !== undefined) {
+    const currentWidth = figma.viewport.bounds.width;
+    const currentHeight = figma.viewport.bounds.height;
+    const newWidth = msg.width > currentWidth ? msg.width : currentWidth;
+    const newHeight = msg.height > currentHeight ? msg.height : currentHeight;
+    
+    if (newWidth !== currentWidth) {
+      figma.ui.resize(newWidth, currentHeight);
+    }
+    if (newHeight !== currentHeight) {
+      figma.ui.resize(currentWidth, newHeight);
+    }
   }
 };

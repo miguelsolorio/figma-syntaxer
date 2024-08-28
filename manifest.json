@@ -12,7 +12,9 @@
   "ui": "ui.html",
   "networkAccess": {
     "allowedDomains": [
-      "none"
+      "https://figma.com",
+      "https://*.google.com",
+      "https://*.jsdelivr.net"
     ]
   }
 }
