@@ -5,8 +5,6 @@
 // You can access browser APIs in the <script> tag inside "ui.html" which has a
 // full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
 
-// Remove the THEME_KEY constant as we won't be using Figma's client storage
-
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, { width: 300, height: 300 });
 
@@ -42,5 +40,4 @@ figma.ui.onmessage = (msg: { type: string; width?: number; height?: number }) =>
       figma.ui.resize(currentWidth, newHeight);
     }
   }
-  // Remove the themeChanged handler as we won't be storing the theme in Figma's client storage
 };

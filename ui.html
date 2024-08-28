@@ -1,10 +1,51 @@
 <div id="theme-selector">
   <select id="theme-dropdown">
     <option value="prism">Default</option>
-    <option value="prism-dark">Dark</option>
-    <option value="prism-okaidia">Okaidia</option>
-    <option value="prism-twilight">Twilight</option>
+    <option value="prism-vsc-dark-plus">VS Code Dark</option>
+    <option value="prism-vs">VS Code Light</option>
     <option value="prism-coy">Coy</option>
+    <option value="prism-dark">Dark</option>
+    <option value="prism-funky">Funky</option>
+    <option value="prism-okaidia">Okaidia</option>
+    <option value="prism-solarizedlight">Solarized Light</option>
+    <option value="prism-tomorrow">Tomorrow</option>
+    <option value="prism-twilight">Twilight</option>
+    <option value="prism-cb">CB</option>
+    <option value="prism-ghcolors">GHColors</option>
+    <option value="prism-pojoaque">Pojoaque</option>
+    <option value="prism-xonokai">Xonokai</option>
+    <option value="prism-ateliersulphurpool-light">Ateliersulphurpool-light</option>
+    <option value="prism-hopscotch">Hopscotch</option>
+    <option value="prism-atom-dark">Atom Dark</option>
+    <option value="prism-duotone-dark">Duotone Dark</option>
+    <option value="prism-duotone-sea">Duotone Sea</option>
+    <option value="prism-duotone-space">Duotone Space</option>
+    <option value="prism-duotone-earth">Duotone Earth</option>
+    <option value="prism-duotone-forest">Duotone Forest</option>
+    <option value="prism-duotone-light">Duotone Light</option>
+    <option value="prism-vs">VS</option>
+    <option value="prism-darcula">Darcula</option>
+    <option value="prism-a11y-dark">a11y Dark</option>
+    <option value="prism-dracula">Dracula</option>
+    <option value="prism-synthwave84">Synthwave '84</option>
+    <option value="prism-shades-of-purple">Shades of Purple</option>
+    <option value="prism-material-dark">Material Dark</option>
+    <option value="prism-material-light">Material Light</option>
+    <option value="prism-material-oceanic">Material Oceanic</option>
+    <option value="prism-nord">Nord</option>
+    <option value="prism-coldark-cold">Coldark Cold</option>
+    <option value="prism-coldark-dark">Coldark Dark</option>
+    <option value="prism-coy-without-shadows">Coy without shadows</option>
+    <option value="prism-gruvbox-dark">Gruvbox Dark</option>
+    <option value="prism-gruvbox-light">Gruvbox Light</option>
+    <option value="prism-lucario">Lucario</option>
+    <option value="prism-night-owl">Night Owl</option>
+    <option value="prism-holi-theme">Holi Theme</option>
+    <option value="prism-z-touch">Z-Touch</option>
+    <option value="prism-solarized-dark-atom">Solarized Dark Atom</option>
+    <option value="prism-one-dark">One Dark</option>
+    <option value="prism-one-light">One Light</option>
+    <option value="prism-laserwave">Laserwave</option>
   </select>
 </div>
 <div id="code-container"></div>
@@ -77,8 +118,14 @@ function highlightCode(code) {
 
 function changeTheme(theme) {
   const linkElement = document.getElementById('prism-theme');
-  linkElement.href = `https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/${theme}.min.css`;
-  localStorage.setItem('prismTheme', theme);
+  if (theme === 'prism') {
+    linkElement.href = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css';
+  } else {
+    linkElement.href = `https://cdn.jsdelivr.net/npm/prism-themes@1.9.0/themes/${theme}.min.css`;
+  }
+  
+  // Send message to plugin code to save the theme
+  parent.postMessage({ pluginMessage: { type: 'themeChanged', theme } }, '*');
   
   // Re-highlight the code with the new theme
   const codeElement = document.querySelector('#code-container pre code');
@@ -104,6 +151,9 @@ onmessage = (event) => {
     highlightCode(msg.content);
   } else if (msg.type === 'no-selection') {
     document.getElementById('code-container').innerHTML = '<p>Please select a single text layer</p>';
+  } else if (msg.type === 'setTheme') {
+    document.getElementById('theme-dropdown').value = msg.theme;
+    changeTheme(msg.theme);
   }
 }
 
@@ -111,13 +161,6 @@ async function initPlugin() {
   try {
     await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js');
     await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js');
-    
-    // Load saved theme from localStorage
-    const savedTheme = localStorage.getItem('prismTheme');
-    if (savedTheme) {
-      document.getElementById('theme-dropdown').value = savedTheme;
-      changeTheme(savedTheme);
-    }
     
     parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
   } catch (error) {
