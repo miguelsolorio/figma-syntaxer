@@ -6,7 +6,7 @@
 // full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__, { width: 300, height: 300 });
+figma.showUI(__html__, { width: 800, height: 500 });
 
 function checkSelection() {
   const selection = figma.currentPage.selection;
@@ -26,25 +26,11 @@ figma.on('selectionchange', checkSelection);
 
 figma.ui.onmessage = (msg: { 
   type: string; 
-  width?: number; 
-  height?: number;
   colorData?: Array<{ text: string, color: string }>;
   backgroundColor?: string;
 }) => {
   if (msg.type === 'init') {
     checkSelection();
-  } else if (msg.type === 'resize' && msg.width !== undefined && msg.height !== undefined) {
-    const currentWidth = figma.viewport.bounds.width;
-    const currentHeight = figma.viewport.bounds.height;
-    const newWidth = msg.width > currentWidth ? msg.width : currentWidth;
-    const newHeight = msg.height > currentHeight ? msg.height : currentHeight;
-    
-    if (newWidth !== currentWidth) {
-      figma.ui.resize(newWidth, currentHeight);
-    }
-    if (newHeight !== currentHeight) {
-      figma.ui.resize(currentWidth, newHeight);
-    }
   } else if (msg.type === 'applyDetailedColors' && msg.colorData && msg.backgroundColor) {
     const selection = figma.currentPage.selection;
     if (selection.length === 1 && selection[0].type === 'TEXT') {

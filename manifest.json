@@ -14,7 +14,8 @@
     "allowedDomains": [
       "https://figma.com",
       "https://*.google.com",
-      "https://*.jsdelivr.net"
+      "https://*.jsdelivr.net",
+      "https://unpkg.com"
     ]
   }
 }

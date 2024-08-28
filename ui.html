@@ -1,57 +1,50 @@
 <div id="theme-selector">
   <select id="theme-dropdown">
-    <option value="prism-vs" selected>VS Code Light</option>
-    <option value="prism-vsc-dark-plus">VS Code Dark</option>
-    <!-- <option value="prism">Default</option> -->
-    <option value="prism-coy">Coy</option>
-    <option value="prism-dark">Dark</option>
-    <option value="prism-funky">Funky</option>
-    <option value="prism-okaidia">Okaidia</option>
-    <option value="prism-solarizedlight">Solarized Light</option>
-    <option value="prism-tomorrow">Tomorrow</option>
-    <option value="prism-twilight">Twilight</option>
-    <option value="prism-cb">CB</option>
-    <option value="prism-ghcolors">GHColors</option>
-    <option value="prism-pojoaque">Pojoaque</option>
-    <option value="prism-xonokai">Xonokai</option>
-    <option value="prism-ateliersulphurpool-light">Ateliersulphurpool-light</option>
-    <option value="prism-hopscotch">Hopscotch</option>
-    <option value="prism-atom-dark">Atom Dark</option>
-    <option value="prism-duotone-dark">Duotone Dark</option>
-    <option value="prism-duotone-sea">Duotone Sea</option>
-    <option value="prism-duotone-space">Duotone Space</option>
-    <option value="prism-duotone-earth">Duotone Earth</option>
-    <option value="prism-duotone-forest">Duotone Forest</option>
-    <option value="prism-duotone-light">Duotone Light</option>
-    <option value="prism-vs">VS</option>
-    <option value="prism-darcula">Darcula</option>
-    <option value="prism-a11y-dark">a11y Dark</option>
-    <option value="prism-dracula">Dracula</option>
-    <option value="prism-synthwave84">Synthwave '84</option>
-    <option value="prism-shades-of-purple">Shades of Purple</option>
-    <option value="prism-material-dark">Material Dark</option>
-    <option value="prism-material-light">Material Light</option>
-    <option value="prism-material-oceanic">Material Oceanic</option>
-    <option value="prism-nord">Nord</option>
-    <option value="prism-coldark-cold">Coldark Cold</option>
-    <option value="prism-coldark-dark">Coldark Dark</option>
-    <option value="prism-coy-without-shadows">Coy without shadows</option>
-    <option value="prism-gruvbox-dark">Gruvbox Dark</option>
-    <option value="prism-gruvbox-light">Gruvbox Light</option>
-    <option value="prism-lucario">Lucario</option>
-    <option value="prism-night-owl">Night Owl</option>
-    <option value="prism-holi-theme">Holi Theme</option>
-    <option value="prism-z-touch">Z-Touch</option>
-    <option value="prism-solarized-dark-atom">Solarized Dark Atom</option>
-    <option value="prism-one-dark">One Dark</option>
-    <option value="prism-one-light">One Light</option>
-    <option value="prism-laserwave">Laserwave</option>
+    <option value="light-plus" selected>Light Plus</option>
+    <option value="dark-plus">Dark Plus</option>
+    <option value="github-dark">GitHub Dark</option>
+    <option value="github-light">GitHub Light</option>
+    <option value="min-dark">Min Dark</option>
+    <option value="min-light">Min Light</option>
+    <option value="monokai">Monokai</option>
+    <option value="nord">Nord</option>
+    <option value="one-dark-pro">One Dark Pro</option>
+    <option value="poimandres">Poimandres</option>
+    <option value="rose-pine">Rose Pine</option>
+    <option value="slack-dark">Slack Dark</option>
+    <option value="slack-ochin">Slack Ochin</option>
+    <option value="solarized-dark">Solarized Dark</option>
+    <option value="solarized-light">Solarized Light</option>
+    <option value="vitesse-dark">Vitesse Dark</option>
+    <option value="vitesse-light">Vitesse Light</option>
+  </select>
+  <select id="language-dropdown">
+    <option value="python" selected>Python</option>
+    <option value="javascript">JavaScript</option>
+    <option value="typescript">TypeScript</option>
+    <option value="html">HTML</option>
+    <option value="css">CSS</option>
+    <option value="json">JSON</option>
+    <option value="markdown">Markdown</option>
+    <option value="java">Java</option>
+    <option value="c">C</option>
+    <option value="cpp">C++</option>
+    <option value="csharp">C#</option>
+    <option value="go">Go</option>
+    <option value="rust">Rust</option>
+    <option value="swift">Swift</option>
+    <option value="php">PHP</option>
+    <option value="ruby">Ruby</option>
+    <option value="sql">SQL</option>
+    <option value="shell">Shell</option>
+    <option value="yaml">YAML</option>
+    <option value="xml">XML</option>
   </select>
   <button id="apply-button">Apply</button>
 </div>
 <div id="code-container"></div>
 
-<link id="prism-theme" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+<link id="shiki-theme" rel="stylesheet" />
 
 <style>
   * {
@@ -59,17 +52,12 @@
     padding: 0;
     box-sizing: border-box;
   }
-  body {
+  html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-  }
-  #code-container {
-    white-space: pre-wrap;
-  }
-  #code-container pre {
-    margin: 0;
-    padding: 20px;
+    overflow: hidden;
   }
   #theme-selector {
     display: flex;
@@ -78,6 +66,16 @@
     padding: 10px;
     background-color: #f0f0f0;
     border-bottom: 1px solid #ccc;
+  }
+  #code-container {
+    height: calc(100% - 50px); /* Subtract the height of #theme-selector */
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  #code-container pre {
+    margin: 0;
+    padding: 20px;
+    min-height: 100%;
   }
   #theme-dropdown {
     width: 70%;
@@ -97,6 +95,8 @@
 </style>
 
 <script>
+let currentLanguage = 'python';
+
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -108,50 +108,61 @@ function loadScript(src) {
 }
 
 function escapeHtml(unsafe) {
-    return unsafe
-         .replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#039;");
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
-function highlightCode(code) {
+async function loadShiki() {
+  await loadScript('https://cdn.jsdelivr.net/npm/shiki@0.14.1/dist/index.unpkg.iife.js');
+  return window.shiki;
+}
+
+async function highlightCode(code, language = currentLanguage) {
+  const shiki = await loadShiki();
+  const highlighter = await shiki.getHighlighter({
+    theme: document.getElementById('theme-dropdown').value,
+    langs: [language]
+  });
+  
   const escapedCode = escapeHtml(code);
+  const highlightedCode = highlighter.codeToHtml(escapedCode, { lang: language });
+  
   const codeContainer = document.getElementById('code-container');
-  codeContainer.innerHTML = `<pre><code class="language-javascript">${escapedCode}</code></pre>`;
-  if (typeof Prism !== 'undefined') {
-    Prism.highlightAll();
-    // After highlighting, calculate dimensions and resize
-    const width = codeContainer.scrollWidth; // Add some padding
-    const height = codeContainer.scrollHeight; // Add padding for header
-    parent.postMessage({ pluginMessage: { type: 'resize', width, height } }, '*');
-  } else {
-    console.error('Prism is not defined');
+  codeContainer.innerHTML = highlightedCode;
+  
+  // Remove the resizing code
+}
+
+async function changeTheme(theme) {
+  const shiki = await loadShiki();
+  const highlighter = await shiki.getHighlighter({
+    theme: theme,
+    langs: [currentLanguage]
+  });
+  
+  const codeElement = document.querySelector('#code-container pre code');
+  if (codeElement) {
+    const code = codeElement.textContent;
+    const highlightedCode = highlighter.codeToHtml(code, { lang: currentLanguage });
+    document.getElementById('code-container').innerHTML = highlightedCode;
+    
+    // Send message to plugin code to save the theme
+    parent.postMessage({ pluginMessage: { type: 'themeChanged', theme } }, '*');
+    
+    // Remove the resizing code
   }
 }
 
-function changeTheme(theme) {
-  const linkElement = document.getElementById('prism-theme');
-  if (theme === 'prism') {
-    linkElement.href = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css';
-  } else {
-    linkElement.href = `https://cdn.jsdelivr.net/npm/prism-themes@1.9.0/themes/${theme}.min.css`;
-  }
-  
-  // Send message to plugin code to save the theme
-  parent.postMessage({ pluginMessage: { type: 'themeChanged', theme } }, '*');
-  
-  // Re-highlight the code with the new theme
+function changeLanguage(language) {
+  currentLanguage = language;
   const codeElement = document.querySelector('#code-container pre code');
-  if (codeElement && typeof Prism !== 'undefined') {
-    Prism.highlightElement(codeElement);
-    
-    // Recalculate dimensions and resize
-    const codeContainer = document.getElementById('code-container');
-    const width = codeContainer.scrollWidth;
-    const height = codeContainer.scrollHeight;
-    parent.postMessage({ pluginMessage: { type: 'resize', width, height } }, '*');
+  if (codeElement) {
+    const code = codeElement.textContent;
+    highlightCode(code, language);
   }
 }
 
@@ -192,13 +203,17 @@ document.getElementById('theme-dropdown').addEventListener('change', (event) => 
   changeTheme(event.target.value);
 });
 
+document.getElementById('language-dropdown').addEventListener('change', (event) => {
+  changeLanguage(event.target.value);
+});
+
 document.getElementById('apply-button').addEventListener('click', applyColors);
 
 onmessage = (event) => {
   const msg = event.data.pluginMessage;
   
   if (msg.type === 'code') {
-    highlightCode(msg.content);
+    highlightCode(msg.content, currentLanguage);
   } else if (msg.type === 'no-selection') {
     document.getElementById('code-container').innerHTML = '<p>Please select a single text layer</p>';
   } else if (msg.type === 'setTheme') {
@@ -209,15 +224,18 @@ onmessage = (event) => {
 
 async function initPlugin() {
   try {
-    await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js');
-    await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js');
+    await loadShiki();
     
-    // Set the default theme to VS Code Light
-    changeTheme('prism-vs');
+    // Set the default theme to Light Plus
+    await changeTheme('light-plus');
+    
+    // Update the dropdowns to reflect the default values
+    document.getElementById('theme-dropdown').value = 'light-plus';
+    document.getElementById('language-dropdown').value = 'python';
     
     parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
   } catch (error) {
-    console.error('Failed to load Prism:', error);
+    console.error('Failed to load Shiki:', error);
   }
 }
 
