@@ -6,9 +6,9 @@
 // full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__, { width: 300, height: 400 });
+figma.showUI(__html__, { width: 300, height: 300 }); // Fixed height, initial width
 
-function sendSelectedTextToUI() {
+function checkSelection() {
   const selection = figma.currentPage.selection;
   if (selection.length === 1 && selection[0].type === 'TEXT') {
     const textNode = selection[0] as TextNode;
@@ -19,10 +19,17 @@ function sendSelectedTextToUI() {
   }
 }
 
-figma.on('selectionchange', sendSelectedTextToUI);
+// Check selection when the plugin starts
+checkSelection();
 
-figma.ui.onmessage = (msg: { type: string }) => {
+figma.on('selectionchange', checkSelection);
+
+figma.ui.onmessage = (msg: { type: string; width?: number }) => {
   if (msg.type === 'init') {
-    sendSelectedTextToUI();
+    // Instead of calling a non-existent function, we'll check the selection again
+    checkSelection();
+  } else if (msg.type === 'resize') {
+    // Resize the plugin window based on the content width
+    figma.ui.resize(msg.width || 300, 300);
   }
 };
