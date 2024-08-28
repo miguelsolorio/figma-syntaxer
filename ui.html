@@ -1,8 +1,8 @@
 <div id="theme-selector">
   <select id="theme-dropdown">
-    <option value="prism">Default</option>
+    <option value="prism-vs" selected>VS Code Light</option>
     <option value="prism-vsc-dark-plus">VS Code Dark</option>
-    <option value="prism-vs">VS Code Light</option>
+    <!-- <option value="prism">Default</option> -->
     <option value="prism-coy">Coy</option>
     <option value="prism-dark">Dark</option>
     <option value="prism-funky">Funky</option>
@@ -211,6 +211,9 @@ async function initPlugin() {
   try {
     await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js');
     await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js');
+    
+    // Set the default theme to VS Code Light
+    changeTheme('prism-vs');
     
     parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
   } catch (error) {
