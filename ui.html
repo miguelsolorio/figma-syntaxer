@@ -1,96 +1,65 @@
-<div id="theme-selector">
-  <select id="theme-dropdown">
-    <option value="light-plus" selected>Light Plus</option>
-    <option value="dark-plus">Dark Plus</option>
-    <option value="github-dark">GitHub Dark</option>
-    <option value="github-light">GitHub Light</option>
-    <option value="min-dark">Min Dark</option>
-    <option value="min-light">Min Light</option>
-    <option value="monokai">Monokai</option>
-    <option value="nord">Nord</option>
-    <option value="one-dark-pro">One Dark Pro</option>
-    <option value="poimandres">Poimandres</option>
-    <option value="rose-pine">Rose Pine</option>
-    <option value="slack-dark">Slack Dark</option>
-    <option value="slack-ochin">Slack Ochin</option>
-    <option value="solarized-dark">Solarized Dark</option>
-    <option value="solarized-light">Solarized Light</option>
-    <option value="vitesse-dark">Vitesse Dark</option>
-    <option value="vitesse-light">Vitesse Light</option>
-  </select>
-  <select id="language-dropdown">
-    <option value="python" selected>Python</option>
-    <option value="javascript">JavaScript</option>
-    <option value="typescript">TypeScript</option>
-    <option value="html">HTML</option>
-    <option value="css">CSS</option>
-    <option value="json">JSON</option>
-    <option value="markdown">Markdown</option>
-    <option value="java">Java</option>
-    <option value="c">C</option>
-    <option value="cpp">C++</option>
-    <option value="csharp">C#</option>
-    <option value="go">Go</option>
-    <option value="rust">Rust</option>
-    <option value="swift">Swift</option>
-    <option value="php">PHP</option>
-    <option value="ruby">Ruby</option>
-    <option value="sql">SQL</option>
-    <option value="shell">Shell</option>
-    <option value="yaml">YAML</option>
-    <option value="xml">XML</option>
-  </select>
-  <button id="apply-button">Apply</button>
+<div class="flex flex-col h-screen bg-white">
+  <div class="flex justify-between items-center p-4 bg-gray-100 shadow-md">
+    <select id="theme-dropdown" class="w-1/3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value="light-plus" selected>Light Plus</option>
+      <option value="dark-plus">Dark Plus</option>
+      <option value="github-dark">GitHub Dark</option>
+      <option value="github-light">GitHub Light</option>
+      <option value="min-dark">Min Dark</option>
+      <option value="min-light">Min Light</option>
+      <option value="monokai">Monokai</option>
+      <option value="nord">Nord</option>
+      <option value="one-dark-pro">One Dark Pro</option>
+      <option value="poimandres">Poimandres</option>
+      <option value="rose-pine">Rose Pine</option>
+      <option value="slack-dark">Slack Dark</option>
+      <option value="slack-ochin">Slack Ochin</option>
+      <option value="solarized-dark">Solarized Dark</option>
+      <option value="solarized-light">Solarized Light</option>
+      <option value="vitesse-dark">Vitesse Dark</option>
+      <option value="vitesse-light">Vitesse Light</option>
+    </select>
+    <select id="language-dropdown" class="w-1/3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value="python" selected>Python</option>
+      <option value="javascript">JavaScript</option>
+      <option value="typescript">TypeScript</option>
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="json">JSON</option>
+      <option value="markdown">Markdown</option>
+      <option value="java">Java</option>
+      <option value="c">C</option>
+      <option value="cpp">C++</option>
+      <option value="csharp">C#</option>
+      <option value="go">Go</option>
+      <option value="rust">Rust</option>
+      <option value="swift">Swift</option>
+      <option value="php">PHP</option>
+      <option value="ruby">Ruby</option>
+      <option value="sql">SQL</option>
+      <option value="shell">Shell</option>
+      <option value="yaml">YAML</option>
+      <option value="xml">XML</option>
+    </select>
+    <button id="apply-button" class="w-1/4 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+      Apply
+    </button>
+  </div>
+  <div id="code-container" class="flex-grow overflow-auto">
+    <!-- Code will be inserted here -->
+  </div>
 </div>
-<div id="code-container"></div>
 
 <link id="shiki-theme" rel="stylesheet" />
 
+<script src="https://cdn.tailwindcss.com"></script>
+
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    overflow: hidden;
-  }
-  #theme-selector {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-bottom: 1px solid #ccc;
-  }
-  #code-container {
-    height: calc(100% - 50px); /* Subtract the height of #theme-selector */
-    overflow-y: auto;
-    white-space: pre-wrap;
-  }
+  /* Custom styles */
   #code-container pre {
     margin: 0;
     padding: 20px;
-    min-height: 100%;
-  }
-  #theme-dropdown {
-    width: 70%;
-    padding: 5px;
-  }
-  #apply-button {
-    width: 25%;
-    padding: 5px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  #apply-button:hover {
-    background-color: #45a049;
+    height: 100%;
   }
 </style>
 
@@ -111,9 +80,8 @@ function escapeHtml(unsafe) {
   return unsafe
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/>/g, "&gt;");
+  // Removed the lines that escape quotes
 }
 
 async function loadShiki() {
@@ -128,13 +96,10 @@ async function highlightCode(code, language = currentLanguage) {
     langs: [language]
   });
   
-  const escapedCode = escapeHtml(code);
-  const highlightedCode = highlighter.codeToHtml(escapedCode, { lang: language });
+  const highlightedCode = highlighter.codeToHtml(code, { lang: language });
   
   const codeContainer = document.getElementById('code-container');
-  codeContainer.innerHTML = highlightedCode;
-  
-  // Remove the resizing code
+  codeContainer.innerHTML = `<pre><code>${highlightedCode}</code></pre>`;
 }
 
 async function changeTheme(theme) {
@@ -215,7 +180,7 @@ onmessage = (event) => {
   if (msg.type === 'code') {
     highlightCode(msg.content, currentLanguage);
   } else if (msg.type === 'no-selection') {
-    document.getElementById('code-container').innerHTML = '<p>Please select a single text layer</p>';
+    document.getElementById('code-container').innerHTML = '<p style="color: #333; display: flex; justify-content: center; align-items: center; height: 100%;">ℹ️ Please select a single text layer</p>';
   } else if (msg.type === 'setTheme') {
     document.getElementById('theme-dropdown').value = msg.theme;
     changeTheme(msg.theme);
