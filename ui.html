@@ -47,6 +47,7 @@
     <option value="prism-one-light">One Light</option>
     <option value="prism-laserwave">Laserwave</option>
   </select>
+  <button id="apply-button">Apply</button>
 </div>
 <div id="code-container"></div>
 
@@ -71,13 +72,27 @@
     padding: 20px;
   }
   #theme-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 10px;
     background-color: #f0f0f0;
     border-bottom: 1px solid #ccc;
   }
   #theme-dropdown {
-    width: 100%;
+    width: 70%;
     padding: 5px;
+  }
+  #apply-button {
+    width: 25%;
+    padding: 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  #apply-button:hover {
+    background-color: #45a049;
   }
 </style>
 
@@ -140,9 +155,44 @@ function changeTheme(theme) {
   }
 }
 
+function applyColors() {
+  const codeElement = document.querySelector('#code-container pre code');
+  if (codeElement) {
+    const colorData = [];
+    const backgroundColor = window.getComputedStyle(codeElement).backgroundColor;
+    
+    // Recursively process all child nodes
+    function processNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const parentStyle = window.getComputedStyle(node.parentElement);
+        colorData.push({
+          text: node.textContent,
+          color: parentStyle.color
+        });
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        for (let child of node.childNodes) {
+          processNode(child);
+        }
+      }
+    }
+    
+    processNode(codeElement);
+    
+    parent.postMessage({ 
+      pluginMessage: { 
+        type: 'applyDetailedColors', 
+        colorData,
+        backgroundColor
+      } 
+    }, '*');
+  }
+}
+
 document.getElementById('theme-dropdown').addEventListener('change', (event) => {
   changeTheme(event.target.value);
 });
+
+document.getElementById('apply-button').addEventListener('click', applyColors);
 
 onmessage = (event) => {
   const msg = event.data.pluginMessage;
