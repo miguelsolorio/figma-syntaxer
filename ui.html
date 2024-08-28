@@ -1,17 +1,71 @@
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5"></p>
-<button id="create">Create</button>
-<button id="cancel">Cancel</button>
+<h2>Syntax Highlighter</h2>
+<div id="code-container"></div>
+
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism.css" rel="stylesheet" />
+
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 20px;
+  }
+  #code-container {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    white-space: pre-wrap;
+  }
+</style>
+
 <script>
-
-document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('count');
-  const count = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
 }
 
-document.getElementById('cancel').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
 }
 
+function highlightCode(code) {
+  const escapedCode = escapeHtml(code);
+  const codeContainer = document.getElementById('code-container');
+  codeContainer.innerHTML = `<pre><code class="language-javascript">${escapedCode}</code></pre>`;
+  if (typeof Prism !== 'undefined') {
+    Prism.highlightAll();
+  } else {
+    console.error('Prism is not defined');
+  }
+}
+
+onmessage = (event) => {
+  const msg = event.data.pluginMessage;
+  
+  if (msg.type === 'code') {
+    highlightCode(msg.content);
+  } else if (msg.type === 'no-selection') {
+    document.getElementById('code-container').innerHTML = '<p>Please select a single text layer</p>';
+  }
+}
+
+async function initPlugin() {
+  try {
+    await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.24.1/prism.min.js');
+    await loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.24.1/components/prism-javascript.min.js');
+    parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
+  } catch (error) {
+    console.error('Failed to load Prism:', error);
+  }
+}
+
+initPlugin();
 </script>
