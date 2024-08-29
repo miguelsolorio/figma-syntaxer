@@ -37,8 +37,8 @@ Syntaxer supports a wide range of programming languages, including but not limit
 - Markdown
 - Java
 - C
-- ++
-- #
+- C++
+- C#
 - Go
 - Rust
 - Swift
