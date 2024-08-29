@@ -16,7 +16,8 @@
       "https://*.google.com",
       "https://*.jsdelivr.net",
       "https://unpkg.com",
-      "https://*.tailwindcss.com"
+      "https://*.tailwindcss.com",
+      "https://cdnjs.cloudflare.com"
     ]
   }
 }

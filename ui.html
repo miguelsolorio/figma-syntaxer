@@ -54,9 +54,13 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/all.min.js"></script>
+
 <style>
   /* Custom styles */
-  #code-container pre {
+  #code-container > pre {
     margin: 0;
     padding: 20px;
     height: 100%;
@@ -90,16 +94,28 @@ async function loadShiki() {
 }
 
 async function highlightCode(code, language = currentLanguage) {
+  // Remove the language declaration line if it exists
+  if (code.trim().startsWith('$')) {
+    const firstLine = code.trim().split('\n')[0];
+    const declaredLang = firstLine.substring(1).trim().toLowerCase();
+    code = code.substring(code.indexOf('\n') + 1);
+  }
+  
+  currentLanguage = language || currentLanguage;
+  
   const shiki = await loadShiki();
   const highlighter = await shiki.getHighlighter({
     theme: document.getElementById('theme-dropdown').value,
-    langs: [language]
+    langs: [currentLanguage]
   });
   
-  const highlightedCode = highlighter.codeToHtml(code, { lang: language });
+  const highlightedCode = highlighter.codeToHtml(code, { lang: currentLanguage });
   
   const codeContainer = document.getElementById('code-container');
   codeContainer.innerHTML = `<pre><code>${highlightedCode}</code></pre>`;
+  
+  // Update the language dropdown
+  document.getElementById('language-dropdown').value = currentLanguage;
 }
 
 async function changeTheme(theme) {
@@ -132,33 +148,39 @@ function changeLanguage(language) {
 }
 
 function applyColors() {
-  const codeElement = document.querySelector('#code-container pre code');
+  const codeElement = document.querySelector('#code-container pre code pre');
   if (codeElement) {
     const colorData = [];
     const backgroundColor = window.getComputedStyle(codeElement).backgroundColor;
+    const hasLanguageDeclaration = codeElement.textContent.trim().startsWith('$');
     
     // Recursively process all child nodes
-    function processNode(node) {
+    function processNode(node, isFirstLine) {
       if (node.nodeType === Node.TEXT_NODE) {
         const parentStyle = window.getComputedStyle(node.parentElement);
-        colorData.push({
-          text: node.textContent,
-          color: parentStyle.color
-        });
+        if (!isFirstLine || !hasLanguageDeclaration) {
+          colorData.push({
+            text: node.textContent,
+            color: parentStyle.color
+          });
+        }
       } else if (node.nodeType === Node.ELEMENT_NODE) {
+        let isFirst = isFirstLine;
         for (let child of node.childNodes) {
-          processNode(child);
+          processNode(child, isFirst);
+          isFirst = false;
         }
       }
     }
     
-    processNode(codeElement);
+    processNode(codeElement, true);
     
     parent.postMessage({ 
       pluginMessage: { 
         type: 'applyDetailedColors', 
         colorData,
-        backgroundColor
+        backgroundColor,
+        hasLanguageDeclaration
       } 
     }, '*');
   }
@@ -178,7 +200,7 @@ onmessage = (event) => {
   const msg = event.data.pluginMessage;
   
   if (msg.type === 'code') {
-    highlightCode(msg.content, currentLanguage);
+    highlightCode(msg.content, msg.language);
   } else if (msg.type === 'no-selection') {
     document.getElementById('code-container').innerHTML = '<p style="color: #333; display: flex; justify-content: center; align-items: center; height: 100%;">ℹ️ Please select a single text layer</p>';
   } else if (msg.type === 'setTheme') {
