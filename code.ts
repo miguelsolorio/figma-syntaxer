@@ -63,6 +63,10 @@ figma.ui.onmessage = async (msg: {
             textNode.parent.appendChild(frame);
           }
           frame.appendChild(textNode);
+        }
+
+        // Apply frame properties only if it's a new frame
+        if (frame && frame !== textNode.parent) {
           frame.layoutMode = 'VERTICAL';
           frame.primaryAxisSizingMode = 'AUTO';
           frame.counterAxisSizingMode = 'AUTO';
@@ -79,12 +83,8 @@ figma.ui.onmessage = async (msg: {
           frame.fills = [{ type: 'SOLID', color: bgColor }];
         }
       } else if (textNode.parent && textNode.parent.type === 'FRAME') {
-        // Remove the frame if it exists and includeBg is false
-        const parent = textNode.parent.parent;
-        if (parent) {
-          parent.appendChild(textNode);
-          textNode.parent.remove();
-        }
+        // If includeBg is false and the text is in a frame, don't update the bg
+        frame = textNode.parent as FrameNode;
       }
       
       // Apply text colors
