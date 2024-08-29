@@ -40,6 +40,7 @@ Syntaxer supports a wide range of programming languages, including but not limit
 - C++
 - C#
 - Go
+- R
 - Rust
 - Swift
 - PHP
@@ -53,8 +54,8 @@ Syntaxer supports a wide range of programming languages, including but not limit
 
 Choose from popular [VS Code themes](https://shiki.style/themes), such as:
 
-- Dark Plus
-- Light Plus
+- Light+
+- Dark+
 - GitHub Dark
 - GitHub Light
 - Min Dark
