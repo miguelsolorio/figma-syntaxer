@@ -75,7 +75,6 @@ figma.ui.onmessage = async (msg: {
       const bgColor = figma.util.rgb(msg.backgroundColor);
       frame.fills = [{ type: 'SOLID', color: bgColor }];
       console.log(msg);
-      console.log(`Frame created with background color: ${msg.backgroundColor}`);
       
       // Apply text colors
       let currentIndex = 0;

@@ -112,7 +112,7 @@ async function highlightCode(code, language = currentLanguage) {
   const highlightedCode = highlighter.codeToHtml(code, { lang: currentLanguage });
   
   const codeContainer = document.getElementById('code-container');
-  codeContainer.innerHTML = `<pre><code>${highlightedCode}</code></pre>`;
+  codeContainer.innerHTML = `${highlightedCode}`;
   
   // Update the language dropdown
   document.getElementById('language-dropdown').value = currentLanguage;
@@ -148,11 +148,14 @@ function changeLanguage(language) {
 }
 
 function applyColors() {
-  const codeElement = document.querySelector('#code-container pre code pre');
+  // code-container child elements changes when switching themes, fix this
+  const codeElement = document.querySelector('#code-container pre');
   if (codeElement) {
     const colorData = [];
     const backgroundColor = window.getComputedStyle(codeElement).backgroundColor;
     const hasLanguageDeclaration = codeElement.textContent.trim().startsWith('$');
+    
+    console.log(`backgroundColor: ${backgroundColor}`);
     
     // Recursively process all child nodes
     function processNode(node, isFirstLine) {
@@ -183,6 +186,7 @@ function applyColors() {
         hasLanguageDeclaration
       } 
     }, '*');
+
   }
 }
 
