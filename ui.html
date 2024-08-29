@@ -1,6 +1,6 @@
 <div class="flex flex-col h-screen bg-white">
-  <div class="flex justify-between items-center p-4 bg-gray-100 shadow-md">
-    <select id="theme-dropdown" class="w-1/3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+  <div class="flex justify-between items-center p-4 bg-gray-100 shadow-md gap-4">
+    <select id="theme-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
       <option value="light-plus" selected>Light Plus</option>
       <option value="dark-plus">Dark Plus</option>
       <option value="github-dark">GitHub Dark</option>
@@ -19,7 +19,7 @@
       <option value="vitesse-dark">Vitesse Dark</option>
       <option value="vitesse-light">Vitesse Light</option>
     </select>
-    <select id="language-dropdown" class="w-1/3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <select id="language-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
       <option value="python" selected>Python</option>
       <option value="javascript">JavaScript</option>
       <option value="typescript">TypeScript</option>
@@ -41,7 +41,11 @@
       <option value="yaml">YAML</option>
       <option value="xml">XML</option>
     </select>
-    <button id="apply-button" class="w-1/4 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+    <div class="flex items-center">
+      <input type="checkbox" id="include-bg" class="mr-2">
+      <label for="include-bg">Background</label>
+    </div>
+    <button id="apply-button" class="w-1/5 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
       Apply
     </button>
   </div>
@@ -64,6 +68,15 @@
     margin: 0;
     padding: 20px;
     height: 100%;
+  }
+  
+  /* Custom select styles */
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2rem;
+    background-repeat: no-repeat;
   }
 </style>
 
@@ -148,11 +161,11 @@ function changeLanguage(language) {
 }
 
 function applyColors() {
-  // code-container child elements changes when switching themes, fix this
   const codeElement = document.querySelector('#code-container pre');
   if (codeElement) {
     const colorData = [];
-    const backgroundColor = window.getComputedStyle(codeElement).backgroundColor;
+    const includeBg = document.getElementById('include-bg').checked;
+    const backgroundColor = includeBg ? window.getComputedStyle(codeElement).backgroundColor : null;
     const hasLanguageDeclaration = codeElement.textContent.trim().startsWith('$');
     
     console.log(`backgroundColor: ${backgroundColor}`);
@@ -183,10 +196,10 @@ function applyColors() {
         type: 'applyDetailedColors', 
         colorData,
         backgroundColor,
-        hasLanguageDeclaration
+        hasLanguageDeclaration,
+        includeBg
       } 
     }, '*');
-
   }
 }
 

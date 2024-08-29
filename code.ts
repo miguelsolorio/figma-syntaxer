@@ -38,43 +38,54 @@ figma.ui.onmessage = async (msg: {
   colorData?: Array<{ text: string, color: string }>;
   backgroundColor?: string;
   hasLanguageDeclaration?: boolean;
+  includeBg?: boolean;
   theme?: string;
 }) => {
   if (msg.type === 'init') {
     checkSelection();
-  } else if (msg.type === 'applyDetailedColors' && msg.colorData && msg.backgroundColor) {
+  } else if (msg.type === 'applyDetailedColors' && msg.colorData) {
     const selection = figma.currentPage.selection;
     if (selection.length === 1 && selection[0].type === 'TEXT') {
       const textNode = selection[0] as TextNode;
       
-      // Check if the text node is already in a frame
-      let frame: FrameNode;
-      if (textNode.parent && textNode.parent.type === 'FRAME') {
-        frame = textNode.parent as FrameNode;
-      } else {
-        // Create a new frame with auto layout
-        frame = figma.createFrame();
-        frame.resize(textNode.width, textNode.height);
-        frame.x = textNode.x;
-        frame.y = textNode.y;
-        if (textNode.parent) {
-          textNode.parent.appendChild(frame);
+      let frame: FrameNode | null = null;
+      if (msg.includeBg) {
+        // Check if the text node is already in a frame
+        if (textNode.parent && textNode.parent.type === 'FRAME') {
+          frame = textNode.parent as FrameNode;
+        } else {
+          // Create a new frame with auto layout
+          frame = figma.createFrame();
+          frame.resize(textNode.width, textNode.height);
+          frame.x = textNode.x;
+          frame.y = textNode.y;
+          if (textNode.parent) {
+            textNode.parent.appendChild(frame);
+          }
+          frame.appendChild(textNode);
+          frame.layoutMode = 'VERTICAL';
+          frame.primaryAxisSizingMode = 'AUTO';
+          frame.counterAxisSizingMode = 'AUTO';
+          frame.itemSpacing = 0;
+          frame.paddingLeft = 20;
+          frame.paddingRight = 20;
+          frame.paddingTop = 20;
+          frame.paddingBottom = 20;
         }
-        frame.appendChild(textNode);
-        frame.layoutMode = 'VERTICAL';
-        frame.primaryAxisSizingMode = 'AUTO';
-        frame.counterAxisSizingMode = 'AUTO';
-        frame.itemSpacing = 0;
-        frame.paddingLeft = 20;
-        frame.paddingRight = 20;
-        frame.paddingTop = 20;
-        frame.paddingBottom = 20;
-      }
 
-      // Apply background color to the frame
-      const bgColor = figma.util.rgb(msg.backgroundColor);
-      frame.fills = [{ type: 'SOLID', color: bgColor }];
-      console.log(msg);
+        // Apply background color to the frame
+        if (msg.backgroundColor) {
+          const bgColor = figma.util.rgb(msg.backgroundColor);
+          frame.fills = [{ type: 'SOLID', color: bgColor }];
+        }
+      } else if (textNode.parent && textNode.parent.type === 'FRAME') {
+        // Remove the frame if it exists and includeBg is false
+        const parent = textNode.parent.parent;
+        if (parent) {
+          parent.appendChild(textNode);
+          textNode.parent.remove();
+        }
+      }
       
       // Apply text colors
       let currentIndex = 0;
