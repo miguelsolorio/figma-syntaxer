@@ -40,6 +40,8 @@ figma.ui.onmessage = async (msg: {
   hasLanguageDeclaration?: boolean;
   includeBg?: boolean;
   theme?: string;
+  language?: string;
+  settings?: {theme: string, language: string, includeBg: boolean};
 }) => {
   if (msg.type === 'init') {
     checkSelection();
@@ -59,14 +61,6 @@ figma.ui.onmessage = async (msg: {
           frame.resize(textNode.width, textNode.height);
           frame.x = textNode.x;
           frame.y = textNode.y;
-          if (textNode.parent) {
-            textNode.parent.appendChild(frame);
-          }
-          frame.appendChild(textNode);
-        }
-
-        // Apply frame properties only if it's a new frame
-        if (frame && frame !== textNode.parent) {
           frame.layoutMode = 'VERTICAL';
           frame.primaryAxisSizingMode = 'AUTO';
           frame.counterAxisSizingMode = 'AUTO';
@@ -75,6 +69,10 @@ figma.ui.onmessage = async (msg: {
           frame.paddingRight = 20;
           frame.paddingTop = 20;
           frame.paddingBottom = 20;
+          if (textNode.parent) {
+            textNode.parent.appendChild(frame);
+          }
+          frame.appendChild(textNode);
         }
 
         // Apply background color to the frame
@@ -106,5 +104,16 @@ figma.ui.onmessage = async (msg: {
     }
   } else if (msg.type === 'themeChanged' && msg.theme) {
     console.log('Theme changed to:', msg.theme);
+  } else if (msg.type === 'saveSettings' && msg.settings) {
+    await figma.clientStorage.setAsync('pluginSettings', msg.settings);
   }
 };
+
+figma.clientStorage.getAsync('pluginSettings').then(settings => {
+  if (settings) {
+    figma.ui.postMessage({ 
+      type: 'loadSettings', 
+      settings: settings 
+    });
+  }
+});

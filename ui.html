@@ -81,9 +81,22 @@
 </style>
 
 <script>
+// Add these variables at the top of your script
+let currentTheme = 'light-plus';
 let currentLanguage = 'python';
+let includeBg = false;
 
-function loadScript(src) {
+// Add this function to save settings
+function saveSettings() {
+  const settings = {
+    theme: currentTheme,
+    language: currentLanguage,
+    includeBg: includeBg
+  };
+  parent.postMessage({ pluginMessage: { type: 'saveSettings', settings } }, '*');
+}
+
+async function loadScript(src) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.src = src;
@@ -131,6 +144,7 @@ async function highlightCode(code, language = currentLanguage) {
   document.getElementById('language-dropdown').value = currentLanguage;
 }
 
+// Update these functions to save settings
 async function changeTheme(theme) {
   const shiki = await loadShiki();
   const highlighter = await shiki.getHighlighter({
@@ -149,6 +163,9 @@ async function changeTheme(theme) {
     
     // Remove the resizing code
   }
+  
+  currentTheme = theme;
+  saveSettings();
 }
 
 function changeLanguage(language) {
@@ -158,6 +175,13 @@ function changeLanguage(language) {
     const code = codeElement.textContent;
     highlightCode(code, language);
   }
+  
+  saveSettings();
+}
+
+function toggleBackground(include) {
+  includeBg = include;
+  saveSettings();
 }
 
 function applyColors() {
@@ -203,6 +227,7 @@ function applyColors() {
   }
 }
 
+// Update event listeners
 document.getElementById('theme-dropdown').addEventListener('change', (event) => {
   changeTheme(event.target.value);
 });
@@ -213,6 +238,11 @@ document.getElementById('language-dropdown').addEventListener('change', (event) 
 
 document.getElementById('apply-button').addEventListener('click', applyColors);
 
+document.getElementById('include-bg').addEventListener('change', (event) => {
+  toggleBackground(event.target.checked);
+});
+
+// Update the onmessage handler
 onmessage = (event) => {
   const msg = event.data.pluginMessage;
   
@@ -220,23 +250,28 @@ onmessage = (event) => {
     highlightCode(msg.content, msg.language);
   } else if (msg.type === 'no-selection') {
     document.getElementById('code-container').innerHTML = '<p style="color: #333; display: flex; justify-content: center; align-items: center; height: 100%;">ℹ️ Please select a single text layer</p>';
-  } else if (msg.type === 'setTheme') {
-    document.getElementById('theme-dropdown').value = msg.theme;
-    changeTheme(msg.theme);
+  } else if (msg.type === 'loadSettings') {
+    if (msg.settings) {
+      currentTheme = msg.settings.theme;
+      currentLanguage = msg.settings.language;
+      includeBg = msg.settings.includeBg;
+      
+      document.getElementById('theme-dropdown').value = currentTheme;
+      document.getElementById('language-dropdown').value = currentLanguage;
+      document.getElementById('include-bg').checked = includeBg;
+      
+      changeTheme(currentTheme);
+      changeLanguage(currentLanguage);
+    }
   }
 }
 
+// Update the initPlugin function
 async function initPlugin() {
   try {
     await loadShiki();
     
-    // Set the default theme to Light Plus
-    await changeTheme('light-plus');
-    
-    // Update the dropdowns to reflect the default values
-    document.getElementById('theme-dropdown').value = 'light-plus';
-    document.getElementById('language-dropdown').value = 'python';
-    
+    // Load settings from plugin code
     parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
   } catch (error) {
     console.error('Failed to load Shiki:', error);
