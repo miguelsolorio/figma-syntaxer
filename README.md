@@ -1,40 +1,90 @@
-Below are the steps to get your plugin running. You can also find instructions at:
+# Syntaxer - Figma Plugin
 
-  https://www.figma.com/plugin-docs/plugin-quickstart-guide/
+![Syntaxer Plugin](syntaxer.png)
 
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
+Syntaxer is a Figma plugin that allows you to color your text like syntax highlighting in Visual Studio Code. It uses the Shiki library to provide accurate and beautiful syntax highlighting for various programming languages.
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
+## Features
 
-  https://nodejs.org/en/download/
+- Syntax highlighting for multiple programming languages
+- VS Code-like color schemes using [Shiki](https://shiki.style)
+- Easy-to-use interface within Figma
 
-Next, install TypeScript using the command:
+## Installation
 
-  npm install -g typescript
+1. Open Figma and go to the Community tab
+2. Search for "Syntaxer"
+3. Click "Install"
 
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
+## Usage
 
-  npm install --save-dev @figma/plugin-typings
+1. Select the text layer you want to apply highlighting to
+2. Open the Syntaxer
+3. Select a color theme
+4. Select a language
+5. Click "Apply Highlighting"
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
+## Supported Languages
 
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+Syntaxer supports a wide range of programming languages, including but not limited to:
 
-For more information, visit https://www.typescriptlang.org/
+- Python
+- JavaScript
+- TypeScript
+- HTML
+- CSS
+- JSON
+- Markdown
+- Java
+- C
+- ++
+- #
+- Go
+- Rust
+- Swift
+- PHP
+- Ruby
+- SQL
+- Shell
+- YAML
+- XML
 
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
+## Color Themes
 
-We recommend writing TypeScript code using Visual Studio code:
+Choose from popular [VS Code themes](https://shiki.style/themes), such as:
 
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "npm: watch". You will have to do this again every time
-    you reopen Visual Studio Code.
+- Dark Plus
+- Light Plus
+- GitHub Dark
+- GitHub Light
+- Min Dark
+- Min Light
+- Monokai
+- Nord
+- One Dark Pro
+- Poimandres
+- Rose Pine
+- Slack Dark
+- Slack Ochin
+- Solarized Dark
+- Solarized Light
+- Vitesse Dark
+- Vitesse Light
 
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+## Development
+
+If you want to modify or contribute to the plugin:
+
+1. Clone this repository
+2. Install dependencies: `npm install`
+3. Make your changes in the `code.ts` file
+4. Compile TypeScript to JavaScript: `npm run build`
+5. Load the plugin in Figma by selecting "Plugins" > "Development" > "Import plugin from manifest..."
+
+## Feedback and Contributions
+
+We welcome feedback and contributions! Please open an issue or submit a pull request on our GitHub repository.
+
+## License
+
+This project is licensed under the MIT License.
