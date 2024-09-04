@@ -3,8 +3,16 @@
     <select id="theme-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
       <option value="light-plus" selected>Light+</option>
       <option value="dark-plus">Dark+</option>
+      <option value="dracula">Dracula</option>
+      <option value="dracula-soft">Dracula Soft</option>
       <option value="github-dark">GitHub Dark</option>
+      <option value="github-dark-dimmed">GitHub Dark Dimmed</option>
       <option value="github-light">GitHub Light</option>
+      <option value="material-theme">Material Theme</option>
+      <option value="material-theme-darker">Material Theme Darker</option>
+      <option value="material-theme-lighter">Material Theme Lighter</option>
+      <option value="material-theme-ocean">Material Theme Ocean</option>
+      <option value="material-theme-palenight">Material Theme Palenight</option>
       <option value="min-dark">Min Dark</option>
       <option value="min-light">Min Light</option>
       <option value="monokai">Monokai</option>
@@ -12,35 +20,192 @@
       <option value="one-dark-pro">One Dark Pro</option>
       <option value="poimandres">Poimandres</option>
       <option value="rose-pine">Rose Pine</option>
+      <option value="rose-pine-dawn">Rose Pine Dawn</option>
+      <option value="rose-pine-moon">Rose Pine Moon</option>
       <option value="slack-dark">Slack Dark</option>
       <option value="slack-ochin">Slack Ochin</option>
       <option value="solarized-dark">Solarized Dark</option>
       <option value="solarized-light">Solarized Light</option>
+      <option value="vitesse-black">Vitesse Black</option>
       <option value="vitesse-dark">Vitesse Dark</option>
       <option value="vitesse-light">Vitesse Light</option>
     </select>
     <select id="language-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
-      <option value="python" selected>Python</option>
-      <option value="javascript">JavaScript</option>
-      <option value="typescript">TypeScript</option>
-      <option value="html">HTML</option>
-      <option value="css">CSS</option>
-      <option value="json">JSON</option>
-      <option value="markdown">Markdown</option>
-      <option value="java">Java</option>
+      <option value="abap">ABAP</option>
+      <option value="actionscript-3">ActionScript 3</option>
+      <option value="ada">Ada</option>
+      <option value="apache">Apache</option>
+      <option value="apex">Apex</option>
+      <option value="apl">APL</option>
+      <option value="applescript">AppleScript</option>
+      <option value="ara">Ara</option>
+      <option value="asm">ASM</option>
+      <option value="astro">Astro</option>
+      <option value="awk">AWK</option>
+      <option value="ballerina">Ballerina</option>
+      <option value="bat">BAT</option>
+      <option value="beancount">Beancount</option>
+      <option value="berry">Berry</option>
+      <option value="bibtex">BibTeX</option>
+      <option value="bicep">Bicep</option>
+      <option value="blade">Blade</option>
       <option value="c">C</option>
+      <option value="cadence">Cadence</option>
+      <option value="clarity">Clarity</option>
+      <option value="clojure">Clojure</option>
+      <option value="cmake">CMake</option>
+      <option value="cobol">COBOL</option>
+      <option value="codeql">CodeQL</option>
+      <option value="coffee">CoffeeScript</option>
+      <option value="cpp-macro">C++ Macro</option>
       <option value="cpp">C++</option>
+      <option value="crystal">Crystal</option>
       <option value="csharp">C#</option>
+      <option value="css">CSS</option>
+      <option value="csv">CSV</option>
+      <option value="cue">CUE</option>
+      <option value="cypher">Cypher</option>
+      <option value="d">D</option>
+      <option value="dart">Dart</option>
+      <option value="dax">DAX</option>
+      <option value="diff">Diff</option>
+      <option value="docker">Docker</option>
+      <option value="dream-maker">Dream Maker</option>
+      <option value="elixir">Elixir</option>
+      <option value="elm">Elm</option>
+      <option value="erb">ERB</option>
+      <option value="erlang">Erlang</option>
+      <option value="fish">Fish</option>
+      <option value="fsharp">F#</option>
+      <option value="gdresource">GDResource</option>
+      <option value="gdscript">GDScript</option>
+      <option value="gdshader">GDShader</option>
+      <option value="gherkin">Gherkin</option>
+      <option value="git-commit">Git Commit</option>
+      <option value="git-rebase">Git Rebase</option>
+      <option value="glimmer-js">Glimmer.js</option>
+      <option value="glimmer-ts">Glimmer.ts</option>
+      <option value="glsl">GLSL</option>
+      <option value="gnuplot">Gnuplot</option>
       <option value="go">Go</option>
-      <option value="r">R</option>
-      <option value="rust">Rust</option>
-      <option value="swift">Swift</option>
+      <option value="graphql">GraphQL</option>
+      <option value="groovy">Groovy</option>
+      <option value="hack">Hack</option>
+      <option value="haml">Haml</option>
+      <option value="handlebars">Handlebars</option>
+      <option value="haskell">Haskell</option>
+      <option value="hcl">HCL</option>
+      <option value="hjson">HJSON</option>
+      <option value="hlsl">HLSL</option>
+      <option value="html">HTML</option>
+      <option value="http">HTTP</option>
+      <option value="imba">Imba</option>
+      <option value="ini">INI</option>
+      <option value="java">Java</option>
+      <option value="javascript">JavaScript</option>
+      <option value="jinja-html">Jinja HTML</option>
+      <option value="jinja">Jinja</option>
+      <option value="jison">Jison</option>
+      <option value="json">JSON</option>
+      <option value="json5">JSON5</option>
+      <option value="jsonc">JSONC</option>
+      <option value="jsonl">JSONL</option>
+      <option value="jsonnet">Jsonnet</option>
+      <option value="jssm">JSSM</option>
+      <option value="jsx">JSX</option>
+      <option value="julia">Julia</option>
+      <option value="kotlin">Kotlin</option>
+      <option value="kusto">Kusto</option>
+      <option value="latex">LaTeX</option>
+      <option value="less">LESS</option>
+      <option value="liquid">Liquid</option>
+      <option value="lisp">Lisp</option>
+      <option value="logo">Logo</option>
+      <option value="lua">Lua</option>
+      <option value="make">Make</option>
+      <option value="markdown">Markdown</option>
+      <option value="marko">Marko</option>
+      <option value="matlab">MATLAB</option>
+      <option value="mdc">MDC</option>
+      <option value="mdx">MDX</option>
+      <option value="mermaid">Mermaid</option>
+      <option value="mojo">Mojo</option>
+      <option value="narrat">Narrat</option>
+      <option value="nextflow">Nextflow</option>
+      <option value="nginx">Nginx</option>
+      <option value="nim">Nim</option>
+      <option value="nix">Nix</option>
+      <option value="nushell">Nushell</option>
+      <option value="objective-c">Objective-C</option>
+      <option value="objective-cpp">Objective-C++</option>
+      <option value="ocaml">OCaml</option>
+      <option value="pascal">Pascal</option>
+      <option value="perl">Perl</option>
+      <option value="php-html">PHP HTML</option>
       <option value="php">PHP</option>
+      <option value="plsql">PL/SQL</option>
+      <option value="postcss">PostCSS</option>
+      <option value="powerquery">PowerQuery</option>
+      <option value="powershell">PowerShell</option>
+      <option value="prisma">Prisma</option>
+      <option value="prolog">Prolog</option>
+      <option value="proto">Proto</option>
+      <option value="pug">Pug</option>
+      <option value="puppet">Puppet</option>
+      <option value="purescript">PureScript</option>
+      <option value="python" selected>Python</option>
+      <option value="r">R</option>
+      <option value="raku">Raku</option>
+      <option value="razor">Razor</option>
+      <option value="reg">Reg</option>
+      <option value="rel">Rel</option>
+      <option value="riscv">RISC-V</option>
+      <option value="rst">reStructuredText</option>
       <option value="ruby">Ruby</option>
+      <option value="rust">Rust</option>
+      <option value="sas">SAS</option>
+      <option value="sass">SASS</option>
+      <option value="scala">Scala</option>
+      <option value="scheme">Scheme</option>
+      <option value="scss">SCSS</option>
+      <option value="shaderlab">ShaderLab</option>
+      <option value="shellscript">Shell Script</option>
+      <option value="shellsession">Shell Session</option>
+      <option value="smalltalk">Smalltalk</option>
+      <option value="solidity">Solidity</option>
+      <option value="sparql">SPARQL</option>
+      <option value="splunk">Splunk</option>
       <option value="sql">SQL</option>
-      <option value="shell">Shell</option>
-      <option value="yaml">YAML</option>
+      <option value="ssh-config">SSH Config</option>
+      <option value="stata">Stata</option>
+      <option value="stylus">Stylus</option>
+      <option value="svelte">Svelte</option>
+      <option value="swift">Swift</option>
+      <option value="system-verilog">SystemVerilog</option>
+      <option value="tasl">TASL</option>
+      <option value="tcl">TCL</option>
+      <option value="tex">TeX</option>
+      <option value="toml">TOML</option>
+      <option value="tsx">TSX</option>
+      <option value="turtle">Turtle</option>
+      <option value="twig">Twig</option>
+      <option value="typescript">TypeScript</option>
+      <option value="v">V</option>
+      <option value="vb">VB</option>
+      <option value="verilog">Verilog</option>
+      <option value="vhdl">VHDL</option>
+      <option value="viml">VimL</option>
+      <option value="vue-html">Vue HTML</option>
+      <option value="vue">Vue</option>
+      <option value="vyper">Vyper</option>
+      <option value="wasm">WASM</option>
+      <option value="wenyan">Wenyan</option>
+      <option value="wgsl">WGSL</option>
+      <option value="wolfram">Wolfram</option>
       <option value="xml">XML</option>
+      <option value="xsl">XSL</option>
+      <option value="yaml">YAML</option>
+      <option value="zenscript">ZenScript</option>
     </select>
     <div class="flex items-center">
       <input type="checkbox" id="include-bg" class="mr-2">
@@ -70,7 +235,7 @@
     padding: 20px;
     height: 100%;
   }
-  
+
   /* Custom select styles */
   select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
@@ -116,7 +281,7 @@ function escapeHtml(unsafe) {
 }
 
 async function loadShiki() {
-  await loadScript('https://cdn.jsdelivr.net/npm/shiki@0.14.1/dist/index.unpkg.iife.js');
+  await loadScript('https://cdn.jsdelivr.net/npm/shiki@0.14.7/dist/index.unpkg.iife.js');
   return window.shiki;
 }
 
@@ -127,20 +292,20 @@ async function highlightCode(code, language = currentLanguage) {
     const declaredLang = firstLine.substring(1).trim().toLowerCase();
     code = code.substring(code.indexOf('\n') + 1);
   }
-  
+
   currentLanguage = language || currentLanguage;
-  
+
   const shiki = await loadShiki();
   const highlighter = await shiki.getHighlighter({
     theme: document.getElementById('theme-dropdown').value,
     langs: [currentLanguage]
   });
-  
+
   const highlightedCode = highlighter.codeToHtml(code, { lang: currentLanguage });
-  
+
   const codeContainer = document.getElementById('code-container');
   codeContainer.innerHTML = `${highlightedCode}`;
-  
+
   // Update the language dropdown
   document.getElementById('language-dropdown').value = currentLanguage;
 }
@@ -152,19 +317,19 @@ async function changeTheme(theme) {
     theme: theme,
     langs: [currentLanguage]
   });
-  
+
   const codeElement = document.querySelector('#code-container pre code');
   if (codeElement) {
     const code = codeElement.textContent;
     const highlightedCode = highlighter.codeToHtml(code, { lang: currentLanguage });
     document.getElementById('code-container').innerHTML = highlightedCode;
-    
+
     // Send message to plugin code to save the theme
     parent.postMessage({ pluginMessage: { type: 'themeChanged', theme } }, '*');
-    
+
     // Remove the resizing code
   }
-  
+
   currentTheme = theme;
   saveSettings();
 }
@@ -176,7 +341,7 @@ function changeLanguage(language) {
     const code = codeElement.textContent;
     highlightCode(code, language);
   }
-  
+
   saveSettings();
 }
 
@@ -192,9 +357,9 @@ function applyColors() {
     const includeBg = document.getElementById('include-bg').checked;
     const backgroundColor = includeBg ? window.getComputedStyle(codeElement).backgroundColor : null;
     const hasLanguageDeclaration = codeElement.textContent.trim().startsWith('$');
-    
+
     console.log(`backgroundColor: ${backgroundColor}`);
-    
+
     // Recursively process all child nodes
     function processNode(node, isFirstLine) {
       if (node.nodeType === Node.TEXT_NODE) {
@@ -213,17 +378,17 @@ function applyColors() {
         }
       }
     }
-    
+
     processNode(codeElement, true);
-    
-    parent.postMessage({ 
-      pluginMessage: { 
-        type: 'applyDetailedColors', 
+
+    parent.postMessage({
+      pluginMessage: {
+        type: 'applyDetailedColors',
         colorData,
         backgroundColor,
         hasLanguageDeclaration,
         includeBg
-      } 
+      }
     }, '*');
   }
 }
@@ -246,7 +411,7 @@ document.getElementById('include-bg').addEventListener('change', (event) => {
 // Update the onmessage handler
 onmessage = (event) => {
   const msg = event.data.pluginMessage;
-  
+
   if (msg.type === 'code') {
     highlightCode(msg.content, msg.language);
   } else if (msg.type === 'no-selection') {
@@ -256,11 +421,11 @@ onmessage = (event) => {
       currentTheme = msg.settings.theme;
       currentLanguage = msg.settings.language;
       includeBg = msg.settings.includeBg;
-      
+
       document.getElementById('theme-dropdown').value = currentTheme;
       document.getElementById('language-dropdown').value = currentLanguage;
       document.getElementById('include-bg').checked = includeBg;
-      
+
       changeTheme(currentTheme);
       changeLanguage(currentLanguage);
     }
@@ -271,7 +436,7 @@ onmessage = (event) => {
 async function initPlugin() {
   try {
     await loadShiki();
-    
+
     // Load settings from plugin code
     parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
   } catch (error) {
