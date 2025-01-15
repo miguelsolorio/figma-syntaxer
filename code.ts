@@ -5,21 +5,59 @@
 // You can access browser APIs in the <script> tag inside "ui.html" which has a
 // full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
 
-// This shows the HTML page in "ui.html".
-figma.showUI(__html__, { width: 600, height: 500 });
+figma.parameters.on('input', ({ key, query, result }: ParameterInputEvent) => {
+  switch (key) {
+    case 'command':
+      result.setSuggestions(['manual-syntax', 'auto-syntax']);
+      break;
+    default:
+      return;
+  }
+});
+
+figma.on('run', ({ command }: RunEvent) => {
+  // Show UI for regular command
+  if (command === 'manual-syntax') {
+    figma.showUI(__html__, { width: 600, height: 500 });
+    checkSelection();
+  }
+  // Auto-apply for the auto command
+  else if (command === 'auto-syntax') {
+    figma.showUI(__html__, { width: 600, height: 500, visible: false });
+    const selection = figma.currentPage.selection;
+    if (selection.length === 1 && selection[0].type === 'TEXT') {
+      const textNode = selection[0] as TextNode;
+      const code = textNode.characters;
+
+      // Check if the code starts with a language declaration
+      const languageMatch = code.match(/^\$([\w-]+)/);
+      const language = languageMatch ? languageMatch[1].toLowerCase() : null;
+
+      figma.ui.postMessage({
+        type: 'code',
+        content: code,
+        language: language,
+        autoRun: true
+      });
+    } else {
+      figma.notify('Please select a single text layer');
+      figma.closePlugin();
+    }
+  }
+});
 
 function checkSelection() {
   const selection = figma.currentPage.selection;
   if (selection.length === 1 && selection[0].type === 'TEXT') {
     const textNode = selection[0] as TextNode;
     const code = textNode.characters;
-    
+
     // Check if the code starts with a language declaration
     const languageMatch = code.match(/^\$([\w-]+)/);
     const language = languageMatch ? languageMatch[1].toLowerCase() : null;
-    
-    figma.ui.postMessage({ 
-      type: 'code', 
+
+    figma.ui.postMessage({
+      type: 'code',
       content: code,
       language: language
     });
@@ -29,12 +67,10 @@ function checkSelection() {
 }
 
 // Check selection when the plugin starts
-checkSelection();
-
 figma.on('selectionchange', checkSelection);
 
-figma.ui.onmessage = async (msg: { 
-  type: string; 
+figma.ui.onmessage = async (msg: {
+  type: string;
   colorData?: Array<{ text: string, color: string }>;
   backgroundColor?: string;
   hasLanguageDeclaration?: boolean;
@@ -49,7 +85,7 @@ figma.ui.onmessage = async (msg: {
     const selection = figma.currentPage.selection;
     if (selection.length === 1 && selection[0].type === 'TEXT') {
       const textNode = selection[0] as TextNode;
-      
+
       let frame: FrameNode | null = null;
       if (msg.includeBg) {
         // Check if the text node is already in a frame
@@ -84,7 +120,7 @@ figma.ui.onmessage = async (msg: {
         // If includeBg is false and the text is in a frame, don't update the bg
         frame = textNode.parent as FrameNode;
       }
-      
+
       // Apply text colors
       let currentIndex = 0;
       if (msg.hasLanguageDeclaration) {
@@ -97,7 +133,7 @@ figma.ui.onmessage = async (msg: {
         textNode.setRangeFills(currentIndex, endIndex, [{ type: 'SOLID', color: textColor }]);
         currentIndex = endIndex;
       });
-      
+
       figma.notify('Colors applied successfully!');
     } else {
       figma.notify('Please select a single text layer');
@@ -106,14 +142,16 @@ figma.ui.onmessage = async (msg: {
     console.log('Theme changed to:', msg.theme);
   } else if (msg.type === 'saveSettings' && msg.settings) {
     await figma.clientStorage.setAsync('pluginSettings', msg.settings);
+  } else if (msg.type === 'closePlugin') {
+    figma.closePlugin();
   }
 };
 
 figma.clientStorage.getAsync('pluginSettings').then(settings => {
   if (settings) {
-    figma.ui.postMessage({ 
-      type: 'loadSettings', 
-      settings: settings 
+    figma.ui.postMessage({
+      type: 'loadSettings',
+      settings: settings
     });
   }
 });
