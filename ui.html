@@ -412,17 +412,80 @@ document.getElementById('include-bg').addEventListener('change', (event) => {
 });
 
 // Update the onmessage handler
-onmessage = (event) => {
+onmessage = async (event) => {
   const msg = event.data.pluginMessage;
 
-  if (msg.type === 'code') {
+  if (msg.type === 'process-nodes') {
+    // Apply settings first
+    currentTheme = msg.settings.theme;
+    currentLanguage = msg.settings.language;
+    includeBg = msg.settings.includeBg;
+
+    // Process each node
+    const processedNodes = [];
+    for (const node of msg.nodes) {
+      await highlightCode(node.content, node.language);
+      const codeElement = document.querySelector('#code-container pre');
+      if (codeElement) {
+        const colorData = [];
+        const hasLanguageDeclaration = node.content.trim().startsWith('$');
+        const backgroundColor = includeBg ? window.getComputedStyle(codeElement).backgroundColor : null;
+
+        // Process the node's colors
+        function processNode(element, isFirstLine) {
+          if (element.nodeType === Node.TEXT_NODE) {
+            const parentStyle = window.getComputedStyle(element.parentElement);
+            if (!isFirstLine || !hasLanguageDeclaration) {
+              colorData.push({
+                text: element.textContent,
+                color: parentStyle.color
+              });
+            }
+          } else if (element.nodeType === Node.ELEMENT_NODE) {
+            let isFirst = isFirstLine;
+            for (let child of element.childNodes) {
+              processNode(child, isFirst);
+              isFirst = false;
+            }
+          }
+        }
+
+        processNode(codeElement, true);
+        processedNodes.push({ colorData, hasLanguageDeclaration });
+      }
+    }
+
+    // Send back all processed nodes
+    parent.postMessage({
+      pluginMessage: {
+        type: 'processedNodes',
+        processedNodes,
+        backgroundColor: includeBg ? window.getComputedStyle(document.querySelector('#code-container pre')).backgroundColor : null,
+        includeBg
+      }
+    }, '*');
+  } else if (msg.type === 'code') {
+    // If settings are provided (for auto-run), apply them first
+    if (msg.settings) {
+      currentTheme = msg.settings.theme;
+      currentLanguage = msg.settings.language;
+      includeBg = msg.settings.includeBg;
+    }
+
     highlightCode(msg.content, msg.language).then(() => {
       if (msg.autoRun) {
         autoApplySyntax();
       }
     });
+    // Only show multiple selection notice if not auto-running
+    if (msg.selectionCount > 1 && !msg.autoRun) {
+      const notice = document.createElement('div');
+      notice.className = 'text-gray-600 text-sm px-4 py-2 bg-gray-100';
+      notice.textContent = `Note: Syntax will be applied to ${msg.selectionCount} selected text layers`;
+      document.querySelector('.flex-col').insertBefore(notice, document.getElementById('code-container'));
+    }
   } else if (msg.type === 'no-selection') {
-    document.getElementById('code-container').innerHTML = '<p style="color: #333; display: flex; justify-content: center; align-items: center; height: 100%;">ℹ️ Please select a single text layer</p>';
+    document.getElementById('code-container').innerHTML = '<p style="color: #333; display: flex; justify-content: center; align-items: center; height: 100%;">ℹ️ Please select at least one text layer</p>';
   } else if (msg.type === 'loadSettings') {
     if (msg.settings) {
       currentTheme = msg.settings.theme;
@@ -457,10 +520,6 @@ async function autoApplySyntax() {
   const codeElement = document.querySelector('#code-container pre');
   if (codeElement) {
     applyColors();
-    // Wait a brief moment for the colors to be applied
-    setTimeout(() => {
-      parent.postMessage({ pluginMessage: { type: 'closePlugin' } }, '*');
-    }, 100);
   }
 }
 </script>
