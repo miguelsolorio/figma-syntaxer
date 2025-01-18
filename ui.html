@@ -474,16 +474,9 @@ onmessage = async (event) => {
 
     highlightCode(msg.content, msg.language).then(() => {
       if (msg.autoRun) {
-        autoApplySyntax();
+        applyColors();
       }
     });
-    // Only show multiple selection notice if not auto-running
-    if (msg.selectionCount > 1 && !msg.autoRun) {
-      const notice = document.createElement('div');
-      notice.className = 'text-gray-600 text-sm px-4 py-2 bg-gray-100';
-      notice.textContent = `Note: Syntax will be applied to ${msg.selectionCount} selected text layers`;
-      document.querySelector('.flex-col').insertBefore(notice, document.getElementById('code-container'));
-    }
   } else if (msg.type === 'no-selection') {
     document.getElementById('code-container').innerHTML = '<p style="color: #333; display: flex; justify-content: center; align-items: center; height: 100%;">ℹ️ Please select at least one text layer</p>';
   } else if (msg.type === 'loadSettings') {

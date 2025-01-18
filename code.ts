@@ -98,11 +98,22 @@ figma.ui.onmessage = async (msg: {
     const textNodes = selection.filter(node => node.type === 'TEXT');
 
     if (textNodes.length > 0) {
-      // Process single node (manual mode)
-      const textNode = textNodes[0];
-      await applyColorsToNode(textNode, msg.colorData, msg.hasLanguageDeclaration || false, msg.includeBg || false, msg.backgroundColor);
+      // Get current settings
+      const settings = await figma.clientStorage.getAsync('pluginSettings') || {
+        theme: 'light-plus',
+        language: 'python',
+        includeBg: false
+      };
 
-      figma.notify(`Updated ${textNodes.length} text ${textNodes.length === 1 ? 'layer' : 'layers'}`);
+      // Process all nodes at once using the same approach as auto mode
+      figma.ui.postMessage({
+        type: 'process-nodes',
+        nodes: textNodes.map(node => ({
+          content: node.characters,
+          language: node.characters.match(/^\$([\w-]+)/)?.[1]?.toLowerCase() || settings.language
+        })),
+        settings
+      });
     } else {
       figma.notify('Please select at least one text layer');
     }
