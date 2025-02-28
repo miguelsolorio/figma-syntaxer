@@ -37,6 +37,7 @@ interface UIMessage {
   selectionCount?: number;
   autoRun?: boolean;
   nodes?: TextNodeContent[];
+  autoDetect?: boolean;
 }
 
 // Default settings
