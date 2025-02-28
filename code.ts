@@ -91,13 +91,13 @@ function detectLanguage(text: string, defaultLanguage: string | null, autoDetect
   // First check for explicit language declaration
   const declaredLanguage = text.match(LANGUAGE_DECLARATION_REGEX)?.[1]?.toLowerCase();
   if (declaredLanguage) return declaredLanguage;
-  
+
   // If no explicit declaration and auto-detect is enabled, try to auto-detect
   if (autoDetect) {
     const detectedLanguage = autoDetectLanguage(text);
     if (detectedLanguage) return detectedLanguage;
   }
-  
+
   // Fall back to provided default or global default
   return defaultLanguage || DEFAULT_SETTINGS.language;
 }
@@ -109,39 +109,39 @@ function autoDetectLanguage(code: string): string | null {
   if (!code || code.trim().length < 10) {
     return null; // Too short to reliably detect
   }
-  
+
   // Remove leading/trailing whitespace
   const normalizedCode = code.trim();
-  
+
   // Check against known patterns for each language
   const scores: Record<string, number> = {};
-  
+
   for (const { language, patterns } of LANGUAGE_PATTERNS) {
     let matchCount = 0;
-    
+
     for (const pattern of patterns) {
       if (pattern.test(normalizedCode)) {
         matchCount++;
       }
     }
-    
+
     if (matchCount > 0) {
       // Calculate a score based on number of matches and pattern specificity
       scores[language] = matchCount * (1 + patterns.length * 0.1);
     }
   }
-  
+
   // Find language with highest score
   let bestMatch = null;
   let highestScore = 0;
-  
+
   for (const [language, score] of Object.entries(scores)) {
     if (score > highestScore) {
       highestScore = score;
       bestMatch = language;
     }
   }
-  
+
   // Only return if we have a reasonable confidence
   return highestScore >= 1 ? bestMatch : null;
 }
@@ -210,7 +210,7 @@ async function applyColorsToNode(
  */
 function handleNodeBackground(textNode: TextNode, backgroundColor?: string): FrameNode {
   let frame: FrameNode;
-  
+
   // Check if the text node is already in a frame
   if (textNode.parent && textNode.parent.type === 'FRAME') {
     frame = textNode.parent as FrameNode;
@@ -220,19 +220,19 @@ function handleNodeBackground(textNode: TextNode, backgroundColor?: string): Fra
     frame.resize(textNode.width, textNode.height);
     frame.x = textNode.x;
     frame.y = textNode.y;
-    
+
     // Configure frame with auto layout
     frame.layoutMode = 'VERTICAL';
     frame.primaryAxisSizingMode = 'AUTO';
     frame.counterAxisSizingMode = 'AUTO';
     frame.itemSpacing = 0;
-    
+
     // Add padding
     frame.paddingLeft = 20;
     frame.paddingRight = 20;
     frame.paddingTop = 20;
     frame.paddingBottom = 20;
-    
+
     // Add to document hierarchy
     if (textNode.parent) {
       textNode.parent.appendChild(frame);
@@ -245,7 +245,7 @@ function handleNodeBackground(textNode: TextNode, backgroundColor?: string): Fra
     const bgColor = figma.util.rgb(backgroundColor);
     frame.fills = [{ type: 'SOLID', color: bgColor }];
   }
-  
+
   return frame;
 }
 
@@ -253,32 +253,32 @@ function handleNodeBackground(textNode: TextNode, backgroundColor?: string): Fra
  * Applies colors to different parts of text node
  */
 function applyTextColors(
-  textNode: TextNode, 
-  colorData: ColorData[], 
+  textNode: TextNode,
+  colorData: ColorData[],
   hasLanguageDeclaration: boolean
 ) {
   let currentIndex = 0;
-  
+
   // Handle language declaration line separately
   if (hasLanguageDeclaration) {
     currentIndex = textNode.characters.indexOf('\n') + 1;
-    textNode.setRangeFills(0, currentIndex, [{ 
-      type: 'SOLID', 
-      color: {r: 0, g: 0, b: 0} 
+    textNode.setRangeFills(0, currentIndex, [{
+      type: 'SOLID',
+      color: {r: 0, g: 0, b: 0}
     }]);
   }
-  
+
   // Apply colors to each text segment
   colorData.forEach(({ text, color }) => {
     const endIndex = currentIndex + text.length;
     const textColor = figma.util.rgb(color);
-    
+
     textNode.setRangeFills(
-      currentIndex, 
-      endIndex, 
+      currentIndex,
+      endIndex,
       [{ type: 'SOLID', color: textColor }]
     );
-    
+
     currentIndex = endIndex;
   });
 }
@@ -294,7 +294,7 @@ async function handleAutoSyntaxCommand(useAutoDetect: boolean = false) {
     const settings = await getPluginSettings();
     // Override auto-detect setting if explicitly requested
     const shouldAutoDetect = useAutoDetect || settings.autoDetect;
-    
+
     // Show UI temporarily to process the syntax highlighting
     figma.showUI(__html__, { visible: false });
 
@@ -326,30 +326,30 @@ async function handleUIMessages(msg: UIMessage) {
         await checkSelection();
       }
       break;
-      
+
     case 'applyDetailedColors':
       // If autoDetect is explicitly specified, use it
       await handleApplyColors(msg.autoDetect);
       break;
-      
+
     case 'processedNodes':
       if (msg.processedNodes) {
         await handleProcessedNodes(msg);
       }
       break;
-      
+
     case 'themeChanged':
       if (msg.theme) {
         console.log('Theme changed to:', msg.theme);
       }
       break;
-      
+
     case 'saveSettings':
       if (msg.settings) {
         await figma.clientStorage.setAsync('pluginSettings', msg.settings);
       }
       break;
-      
+
     case 'toggleAutoDetect':
       // Update the autoDetect setting
       const settings = await getPluginSettings();
@@ -368,7 +368,7 @@ async function handleApplyColors(autoDetect?: boolean) {
 
   if (textNodes.length > 0) {
     const settings = await getPluginSettings();
-    
+
     // Use provided autoDetect if specified, otherwise use the stored setting
     const shouldAutoDetect = autoDetect !== undefined ? autoDetect : settings.autoDetect;
 
@@ -394,7 +394,7 @@ async function handleApplyColors(autoDetect?: boolean) {
  */
 async function handleProcessedNodes(msg: UIMessage) {
   const textNodes = getSelectedTextNodes();
-  
+
   // Apply colors to each node
   if (msg.processedNodes && msg.processedNodes.length > 0) {
     for (let i = 0; i < textNodes.length; i++) {
@@ -427,7 +427,7 @@ async function main() {
     await handleAutoSyntaxCommand(true); // Force auto-detection
   } else {
     // Show manual UI
-    figma.showUI(__html__, { width: 600, height: 500 });
+    figma.showUI(__html__, { width: 750, height: 500 });
     await checkSelection();
   }
 
