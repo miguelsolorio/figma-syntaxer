@@ -1,518 +1,646 @@
-<div class="flex flex-col h-screen bg-white">
-  <div class="flex justify-between items-center p-4 bg-gray-100 shadow-md gap-4">
-    <select id="theme-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
-      <option value="light-plus" selected>Light+</option>
-      <option value="dark-plus">Dark+</option>
-      <option value="dracula">Dracula</option>
-      <option value="dracula-soft">Dracula Soft</option>
-      <option value="github-dark">GitHub Dark</option>
-      <option value="github-dark-dimmed">GitHub Dark Dimmed</option>
-      <option value="github-light">GitHub Light</option>
-      <option value="material-theme">Material Theme</option>
-      <option value="material-theme-darker">Material Theme Darker</option>
-      <option value="material-theme-lighter">Material Theme Lighter</option>
-      <option value="material-theme-ocean">Material Theme Ocean</option>
-      <option value="material-theme-palenight">Material Theme Palenight</option>
-      <option value="min-dark">Min Dark</option>
-      <option value="min-light">Min Light</option>
-      <option value="monokai">Monokai</option>
-      <option value="nord">Nord</option>
-      <option value="one-dark-pro">One Dark Pro</option>
-      <option value="poimandres">Poimandres</option>
-      <option value="rose-pine">Rose Pine</option>
-      <option value="rose-pine-dawn">Rose Pine Dawn</option>
-      <option value="rose-pine-moon">Rose Pine Moon</option>
-      <option value="slack-dark">Slack Dark</option>
-      <option value="slack-ochin">Slack Ochin</option>
-      <option value="solarized-dark">Solarized Dark</option>
-      <option value="solarized-light">Solarized Light</option>
-      <option value="vitesse-black">Vitesse Black</option>
-      <option value="vitesse-dark">Vitesse Dark</option>
-      <option value="vitesse-light">Vitesse Light</option>
-    </select>
-    <select id="language-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
-      <option value="abap">ABAP</option>
-      <option value="actionscript-3">ActionScript 3</option>
-      <option value="ada">Ada</option>
-      <option value="apache">Apache</option>
-      <option value="apex">Apex</option>
-      <option value="apl">APL</option>
-      <option value="applescript">AppleScript</option>
-      <option value="ara">Ara</option>
-      <option value="asm">ASM</option>
-      <option value="astro">Astro</option>
-      <option value="awk">AWK</option>
-      <option value="ballerina">Ballerina</option>
-      <option value="bat">BAT</option>
-      <option value="beancount">Beancount</option>
-      <option value="berry">Berry</option>
-      <option value="bibtex">BibTeX</option>
-      <option value="bicep">Bicep</option>
-      <option value="blade">Blade</option>
-      <option value="c">C</option>
-      <option value="cadence">Cadence</option>
-      <option value="clarity">Clarity</option>
-      <option value="clojure">Clojure</option>
-      <option value="cmake">CMake</option>
-      <option value="cobol">COBOL</option>
-      <option value="codeql">CodeQL</option>
-      <option value="coffee">CoffeeScript</option>
-      <option value="cpp-macro">C++ Macro</option>
-      <option value="cpp">C++</option>
-      <option value="crystal">Crystal</option>
-      <option value="csharp">C#</option>
-      <option value="css">CSS</option>
-      <option value="csv">CSV</option>
-      <option value="cue">CUE</option>
-      <option value="cypher">Cypher</option>
-      <option value="d">D</option>
-      <option value="dart">Dart</option>
-      <option value="dax">DAX</option>
-      <option value="diff">Diff</option>
-      <option value="docker">Docker</option>
-      <option value="dream-maker">Dream Maker</option>
-      <option value="elixir">Elixir</option>
-      <option value="elm">Elm</option>
-      <option value="erb">ERB</option>
-      <option value="erlang">Erlang</option>
-      <option value="fish">Fish</option>
-      <option value="fsharp">F#</option>
-      <option value="gdresource">GDResource</option>
-      <option value="gdscript">GDScript</option>
-      <option value="gdshader">GDShader</option>
-      <option value="gherkin">Gherkin</option>
-      <option value="git-commit">Git Commit</option>
-      <option value="git-rebase">Git Rebase</option>
-      <option value="glimmer-js">Glimmer.js</option>
-      <option value="glimmer-ts">Glimmer.ts</option>
-      <option value="glsl">GLSL</option>
-      <option value="gnuplot">Gnuplot</option>
-      <option value="go">Go</option>
-      <option value="graphql">GraphQL</option>
-      <option value="groovy">Groovy</option>
-      <option value="hack">Hack</option>
-      <option value="haml">Haml</option>
-      <option value="handlebars">Handlebars</option>
-      <option value="haskell">Haskell</option>
-      <option value="hcl">HCL</option>
-      <option value="hjson">HJSON</option>
-      <option value="hlsl">HLSL</option>
-      <option value="html">HTML</option>
-      <option value="http">HTTP</option>
-      <option value="imba">Imba</option>
-      <option value="ini">INI</option>
-      <option value="java">Java</option>
-      <option value="javascript">JavaScript</option>
-      <option value="jinja-html">Jinja HTML</option>
-      <option value="jinja">Jinja</option>
-      <option value="jison">Jison</option>
-      <option value="json">JSON</option>
-      <option value="json5">JSON5</option>
-      <option value="jsonc">JSONC</option>
-      <option value="jsonl">JSONL</option>
-      <option value="jsonnet">Jsonnet</option>
-      <option value="jssm">JSSM</option>
-      <option value="jsx">JSX</option>
-      <option value="julia">Julia</option>
-      <option value="kotlin">Kotlin</option>
-      <option value="kusto">Kusto</option>
-      <option value="latex">LaTeX</option>
-      <option value="less">LESS</option>
-      <option value="liquid">Liquid</option>
-      <option value="lisp">Lisp</option>
-      <option value="logo">Logo</option>
-      <option value="lua">Lua</option>
-      <option value="make">Make</option>
-      <option value="markdown">Markdown</option>
-      <option value="marko">Marko</option>
-      <option value="matlab">MATLAB</option>
-      <option value="mdc">MDC</option>
-      <option value="mdx">MDX</option>
-      <option value="mermaid">Mermaid</option>
-      <option value="mojo">Mojo</option>
-      <option value="narrat">Narrat</option>
-      <option value="nextflow">Nextflow</option>
-      <option value="nginx">Nginx</option>
-      <option value="nim">Nim</option>
-      <option value="nix">Nix</option>
-      <option value="nushell">Nushell</option>
-      <option value="objective-c">Objective-C</option>
-      <option value="objective-cpp">Objective-C++</option>
-      <option value="ocaml">OCaml</option>
-      <option value="pascal">Pascal</option>
-      <option value="perl">Perl</option>
-      <option value="php-html">PHP HTML</option>
-      <option value="php">PHP</option>
-      <option value="plsql">PL/SQL</option>
-      <option value="postcss">PostCSS</option>
-      <option value="powerquery">PowerQuery</option>
-      <option value="powershell">PowerShell</option>
-      <option value="prisma">Prisma</option>
-      <option value="prolog">Prolog</option>
-      <option value="proto">Proto</option>
-      <option value="pug">Pug</option>
-      <option value="puppet">Puppet</option>
-      <option value="purescript">PureScript</option>
-      <option value="python" selected>Python</option>
-      <option value="r">R</option>
-      <option value="raku">Raku</option>
-      <option value="razor">Razor</option>
-      <option value="reg">Reg</option>
-      <option value="rel">Rel</option>
-      <option value="riscv">RISC-V</option>
-      <option value="rst">reStructuredText</option>
-      <option value="ruby">Ruby</option>
-      <option value="rust">Rust</option>
-      <option value="sas">SAS</option>
-      <option value="sass">SASS</option>
-      <option value="scala">Scala</option>
-      <option value="scheme">Scheme</option>
-      <option value="scss">SCSS</option>
-      <option value="shaderlab">ShaderLab</option>
-      <option value="shellscript">Shell Script</option>
-      <option value="shellsession">Shell Session</option>
-      <option value="smalltalk">Smalltalk</option>
-      <option value="solidity">Solidity</option>
-      <option value="sparql">SPARQL</option>
-      <option value="splunk">Splunk</option>
-      <option value="sql">SQL</option>
-      <option value="ssh-config">SSH Config</option>
-      <option value="stata">Stata</option>
-      <option value="stylus">Stylus</option>
-      <option value="svelte">Svelte</option>
-      <option value="swift">Swift</option>
-      <option value="system-verilog">SystemVerilog</option>
-      <option value="tasl">TASL</option>
-      <option value="tcl">TCL</option>
-      <option value="tex">TeX</option>
-      <option value="toml">TOML</option>
-      <option value="tsx">TSX</option>
-      <option value="turtle">Turtle</option>
-      <option value="twig">Twig</option>
-      <option value="typescript">TypeScript</option>
-      <option value="v">V</option>
-      <option value="vb">VB</option>
-      <option value="verilog">Verilog</option>
-      <option value="vhdl">VHDL</option>
-      <option value="viml">VimL</option>
-      <option value="vue-html">Vue HTML</option>
-      <option value="vue">Vue</option>
-      <option value="vyper">Vyper</option>
-      <option value="wasm">WASM</option>
-      <option value="wenyan">Wenyan</option>
-      <option value="wgsl">WGSL</option>
-      <option value="wolfram">Wolfram</option>
-      <option value="xml">XML</option>
-      <option value="xsl">XSL</option>
-      <option value="yaml">YAML</option>
-      <option value="zenscript">ZenScript</option>
-    </select>
-    <div class="flex items-center">
-      <input type="checkbox" id="include-bg" class="mr-2">
-      <label for="include-bg">Background</label>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figma Syntaxer</title>
+  
+  <!-- External CSS dependencies -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+  
+  <!-- Custom styles -->
+  <style>
+    #code-container > pre {
+      margin: 0;
+      padding: 20px;
+      width: 100%;
+      height: calc(100vh - 74px);
+      position: fixed;
+      overflow: auto;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+      background-position: right 0.5rem center;
+      background-size: 1.5em 1.5em;
+      padding-right: 2rem;
+      background-repeat: no-repeat;
+    }
+    
+    .empty-state {
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Application Layout -->
+  <div class="flex flex-col h-screen bg-white">
+    <!-- Toolbar -->
+    <div class="flex justify-between items-center p-4 bg-gray-100 shadow-md gap-4">
+      <!-- Theme Selector -->
+      <select id="theme-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
+        <optgroup label="Light Themes">
+          <option value="light-plus" selected>Light+</option>
+          <option value="github-light">GitHub Light</option>
+          <option value="material-theme-lighter">Material Theme Lighter</option>
+          <option value="min-light">Min Light</option>
+          <option value="rose-pine-dawn">Rose Pine Dawn</option>
+          <option value="solarized-light">Solarized Light</option>
+          <option value="vitesse-light">Vitesse Light</option>
+        </optgroup>
+        <optgroup label="Dark Themes">
+          <option value="dark-plus">Dark+</option>
+          <option value="dracula">Dracula</option>
+          <option value="dracula-soft">Dracula Soft</option>
+          <option value="github-dark">GitHub Dark</option>
+          <option value="github-dark-dimmed">GitHub Dark Dimmed</option>
+          <option value="material-theme">Material Theme</option>
+          <option value="material-theme-darker">Material Theme Darker</option>
+          <option value="material-theme-ocean">Material Theme Ocean</option>
+          <option value="material-theme-palenight">Material Theme Palenight</option>
+          <option value="min-dark">Min Dark</option>
+          <option value="monokai">Monokai</option>
+          <option value="nord">Nord</option>
+          <option value="one-dark-pro">One Dark Pro</option>
+          <option value="poimandres">Poimandres</option>
+          <option value="rose-pine">Rose Pine</option>
+          <option value="rose-pine-moon">Rose Pine Moon</option>
+          <option value="slack-dark">Slack Dark</option>
+          <option value="slack-ochin">Slack Ochin</option>
+          <option value="solarized-dark">Solarized Dark</option>
+          <option value="vitesse-black">Vitesse Black</option>
+          <option value="vitesse-dark">Vitesse Dark</option>
+        </optgroup>
+      </select>
+      
+      <!-- Language Selector -->
+      <select id="language-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
+        <!-- Web Languages -->
+        <optgroup label="Web">
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="jsx">JSX</option>
+          <option value="tsx">TSX</option>
+        </optgroup>
+        
+        <!-- Programming Languages -->
+        <optgroup label="Programming">
+          <option value="c">C</option>
+          <option value="cpp">C++</option>
+          <option value="csharp">C#</option>
+          <option value="go">Go</option>
+          <option value="java">Java</option>
+          <option value="kotlin">Kotlin</option>
+          <option value="php">PHP</option>
+          <option value="python" selected>Python</option>
+          <option value="ruby">Ruby</option>
+          <option value="rust">Rust</option>
+          <option value="swift">Swift</option>
+        </optgroup>
+        
+        <!-- Data & Markup Languages -->
+        <optgroup label="Data & Markup">
+          <option value="json">JSON</option>
+          <option value="yaml">YAML</option>
+          <option value="markdown">Markdown</option>
+          <option value="xml">XML</option>
+          <option value="toml">TOML</option>
+        </optgroup>
+        
+        <!-- Other Languages -->
+        <optgroup label="Other">
+          <option value="bash">Bash</option>
+          <option value="sql">SQL</option>
+          <option value="graphql">GraphQL</option>
+          <option value="dockerfile">Dockerfile</option>
+          <option value="shellscript">Shell Script</option>
+        </optgroup>
+        
+        <!-- All Other Languages (Collapsed) -->
+        <optgroup label="More Languages">
+          <option value="abap">ABAP</option>
+          <option value="actionscript-3">ActionScript 3</option>
+          <option value="ada">Ada</option>
+          <option value="apache">Apache</option>
+          <option value="apex">Apex</option>
+          <option value="apl">APL</option>
+          <option value="applescript">AppleScript</option>
+          <option value="ara">Ara</option>
+          <option value="asm">ASM</option>
+          <option value="astro">Astro</option>
+          <option value="awk">AWK</option>
+          <option value="ballerina">Ballerina</option>
+          <option value="bat">BAT</option>
+          <option value="beancount">Beancount</option>
+          <option value="berry">Berry</option>
+          <option value="bibtex">BibTeX</option>
+          <option value="bicep">Bicep</option>
+          <option value="blade">Blade</option>
+          <option value="cadence">Cadence</option>
+          <option value="clarity">Clarity</option>
+          <option value="clojure">Clojure</option>
+          <option value="cmake">CMake</option>
+          <option value="cobol">COBOL</option>
+          <option value="codeql">CodeQL</option>
+          <option value="coffee">CoffeeScript</option>
+          <option value="cpp-macro">C++ Macro</option>
+          <option value="crystal">Crystal</option>
+          <option value="csv">CSV</option>
+          <option value="cue">CUE</option>
+          <option value="cypher">Cypher</option>
+          <option value="d">D</option>
+          <option value="dart">Dart</option>
+          <option value="dax">DAX</option>
+          <option value="diff">Diff</option>
+          <option value="docker">Docker</option>
+          <option value="dream-maker">Dream Maker</option>
+          <option value="elixir">Elixir</option>
+          <option value="elm">Elm</option>
+          <option value="erb">ERB</option>
+          <option value="erlang">Erlang</option>
+          <option value="fish">Fish</option>
+          <option value="fsharp">F#</option>
+          <option value="gdresource">GDResource</option>
+          <option value="gdscript">GDScript</option>
+          <option value="gdshader">GDShader</option>
+          <option value="gherkin">Gherkin</option>
+          <option value="git-commit">Git Commit</option>
+          <option value="git-rebase">Git Rebase</option>
+          <option value="glimmer-js">Glimmer.js</option>
+          <option value="glimmer-ts">Glimmer.ts</option>
+          <option value="glsl">GLSL</option>
+          <option value="gnuplot">Gnuplot</option>
+          <option value="groovy">Groovy</option>
+          <option value="hack">Hack</option>
+          <option value="haml">Haml</option>
+          <option value="handlebars">Handlebars</option>
+          <option value="haskell">Haskell</option>
+          <option value="hcl">HCL</option>
+          <option value="hjson">HJSON</option>
+          <option value="hlsl">HLSL</option>
+          <option value="http">HTTP</option>
+          <option value="imba">Imba</option>
+          <option value="ini">INI</option>
+          <option value="jinja-html">Jinja HTML</option>
+          <option value="jinja">Jinja</option>
+          <option value="jison">Jison</option>
+          <option value="json5">JSON5</option>
+          <option value="jsonc">JSONC</option>
+          <option value="jsonl">JSONL</option>
+          <option value="jsonnet">Jsonnet</option>
+          <option value="jssm">JSSM</option>
+          <option value="julia">Julia</option>
+          <option value="kusto">Kusto</option>
+          <option value="latex">LaTeX</option>
+          <option value="less">LESS</option>
+          <option value="liquid">Liquid</option>
+          <option value="lisp">Lisp</option>
+          <option value="logo">Logo</option>
+          <option value="lua">Lua</option>
+          <option value="make">Make</option>
+          <option value="marko">Marko</option>
+          <option value="matlab">MATLAB</option>
+          <option value="mdc">MDC</option>
+          <option value="mdx">MDX</option>
+          <option value="mermaid">Mermaid</option>
+          <option value="mojo">Mojo</option>
+          <option value="narrat">Narrat</option>
+          <option value="nextflow">Nextflow</option>
+          <option value="nginx">Nginx</option>
+          <option value="nim">Nim</option>
+          <option value="nix">Nix</option>
+          <option value="nushell">Nushell</option>
+          <option value="objective-c">Objective-C</option>
+          <option value="objective-cpp">Objective-C++</option>
+          <option value="ocaml">OCaml</option>
+          <option value="pascal">Pascal</option>
+          <option value="perl">Perl</option>
+          <option value="php-html">PHP HTML</option>
+          <option value="plsql">PL/SQL</option>
+          <option value="postcss">PostCSS</option>
+          <option value="powerquery">PowerQuery</option>
+          <option value="powershell">PowerShell</option>
+          <option value="prisma">Prisma</option>
+          <option value="prolog">Prolog</option>
+          <option value="proto">Proto</option>
+          <option value="pug">Pug</option>
+          <option value="puppet">Puppet</option>
+          <option value="purescript">PureScript</option>
+          <option value="r">R</option>
+          <option value="raku">Raku</option>
+          <option value="razor">Razor</option>
+          <option value="reg">Reg</option>
+          <option value="rel">Rel</option>
+          <option value="riscv">RISC-V</option>
+          <option value="rst">reStructuredText</option>
+          <option value="sas">SAS</option>
+          <option value="sass">SASS</option>
+          <option value="scala">Scala</option>
+          <option value="scheme">Scheme</option>
+          <option value="scss">SCSS</option>
+          <option value="shaderlab">ShaderLab</option>
+          <option value="shellsession">Shell Session</option>
+          <option value="smalltalk">Smalltalk</option>
+          <option value="solidity">Solidity</option>
+          <option value="sparql">SPARQL</option>
+          <option value="splunk">Splunk</option>
+          <option value="ssh-config">SSH Config</option>
+          <option value="stata">Stata</option>
+          <option value="stylus">Stylus</option>
+          <option value="svelte">Svelte</option>
+          <option value="system-verilog">SystemVerilog</option>
+          <option value="tasl">TASL</option>
+          <option value="tcl">TCL</option>
+          <option value="tex">TeX</option>
+          <option value="turtle">Turtle</option>
+          <option value="twig">Twig</option>
+          <option value="v">V</option>
+          <option value="vb">VB</option>
+          <option value="verilog">Verilog</option>
+          <option value="vhdl">VHDL</option>
+          <option value="viml">VimL</option>
+          <option value="vue-html">Vue HTML</option>
+          <option value="vue">Vue</option>
+          <option value="vyper">Vyper</option>
+          <option value="wasm">WASM</option>
+          <option value="wenyan">Wenyan</option>
+          <option value="wgsl">WGSL</option>
+          <option value="wolfram">Wolfram</option>
+          <option value="xsl">XSL</option>
+          <option value="zenscript">ZenScript</option>
+        </optgroup>
+      </select>
+      
+      <!-- Background Toggle -->
+      <div class="flex items-center">
+        <input type="checkbox" id="include-bg" class="mr-2">
+        <label for="include-bg">Background</label>
+      </div>
+      
+      <!-- Apply Button -->
+      <button id="apply-button" class="w-1/5 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        Apply
+      </button>
     </div>
-    <button id="apply-button" class="w-1/5 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-      Apply
-    </button>
+    
+    <!-- Code Preview Container -->
+    <div id="code-container" class="flex-grow overflow-auto">
+      <!-- Code will be inserted here -->
+    </div>
   </div>
-  <div id="code-container" class="flex-grow overflow-auto">
-    <!-- Code will be inserted here -->
-  </div>
-</div>
 
-<link id="shiki-theme" rel="stylesheet" />
+  <!-- External Script Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 
-<script src="https://cdn.tailwindcss.com"></script>
+  <!-- Main Application Script -->
+  <script>
+    /**
+     * Core application state
+     */
+    const appState = {
+      currentTheme: 'light-plus',
+      currentLanguage: 'python',
+      includeBg: false
+    };
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/all.min.js"></script>
+    /**
+     * Helper to load external JavaScript
+     */
+    async function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
 
-<style>
-  /* Custom styles */
-  #code-container > pre {
-    margin: 0;
-    padding: 20px;
-    width: 100%;
-    height: calc(100vh - 74px); /* TODO: update parent container DOM structure */
-    position: fixed;
-    overflow: scroll;
-  }
+    /**
+     * Sanitize HTML to prevent XSS
+     */
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
 
-  /* Custom select styles */
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
-    background-position: right 0.5rem center;
-    background-size: 1.5em 1.5em;
-    padding-right: 2rem;
-    background-repeat: no-repeat;
-  }
-</style>
+    /**
+     * Load Shiki syntax highlighter
+     */
+    async function loadShiki() {
+      await loadScript('https://cdn.jsdelivr.net/npm/shiki@0.14.7/dist/index.unpkg.iife.js');
+      return window.shiki;
+    }
 
-<script>
-// Add these variables at the top of your script
-let currentTheme = 'light-plus';
-let currentLanguage = 'python';
-let includeBg = false;
+    /**
+     * Save user settings to plugin storage
+     */
+    function saveSettings() {
+      const settings = {
+        theme: appState.currentTheme,
+        language: appState.currentLanguage,
+        includeBg: appState.includeBg
+      };
+      parent.postMessage({ pluginMessage: { type: 'saveSettings', settings } }, '*');
+    }
 
-// Add this function to save settings
-function saveSettings() {
-  const settings = {
-    theme: currentTheme,
-    language: currentLanguage,
-    includeBg: includeBg
-  };
-  parent.postMessage({ pluginMessage: { type: 'saveSettings', settings } }, '*');
-}
+    /**
+     * Highlight code with current settings
+     */
+    async function highlightCode(code, language = appState.currentLanguage) {
+      // Process language declaration if present
+      if (code.trim().startsWith('$')) {
+        code = code.substring(code.indexOf('\n') + 1);
+      }
 
-async function loadScript(src) {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = src;
-    script.onload = resolve;
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-}
+      // Update current language
+      appState.currentLanguage = language || appState.currentLanguage;
 
-function escapeHtml(unsafe) {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-  // Removed the lines that escape quotes
-}
+      try {
+        // Initialize syntax highlighter
+        const shiki = await loadShiki();
+        const highlighter = await shiki.getHighlighter({
+          theme: document.getElementById('theme-dropdown').value,
+          langs: [appState.currentLanguage]
+        });
 
-async function loadShiki() {
-  await loadScript('https://cdn.jsdelivr.net/npm/shiki@0.14.7/dist/index.unpkg.iife.js');
-  return window.shiki;
-}
-
-async function highlightCode(code, language = currentLanguage) {
-  // Remove the language declaration line if it exists
-  if (code.trim().startsWith('$')) {
-    const firstLine = code.trim().split('\n')[0];
-    const declaredLang = firstLine.substring(1).trim().toLowerCase();
-    code = code.substring(code.indexOf('\n') + 1);
-  }
-
-  currentLanguage = language || currentLanguage;
-
-  const shiki = await loadShiki();
-  const highlighter = await shiki.getHighlighter({
-    theme: document.getElementById('theme-dropdown').value,
-    langs: [currentLanguage]
-  });
-
-  const highlightedCode = highlighter.codeToHtml(code, { lang: currentLanguage });
-
-  const codeContainer = document.getElementById('code-container');
-  codeContainer.innerHTML = `${highlightedCode}`;
-
-  // Update the language dropdown
-  document.getElementById('language-dropdown').value = currentLanguage;
-}
-
-// Update these functions to save settings
-async function changeTheme(theme) {
-  const shiki = await loadShiki();
-  const highlighter = await shiki.getHighlighter({
-    theme: theme,
-    langs: [currentLanguage]
-  });
-
-  const codeElement = document.querySelector('#code-container pre code');
-  if (codeElement) {
-    const code = codeElement.textContent;
-    const highlightedCode = highlighter.codeToHtml(code, { lang: currentLanguage });
-    document.getElementById('code-container').innerHTML = highlightedCode;
-
-    // Send message to plugin code to save the theme
-    parent.postMessage({ pluginMessage: { type: 'themeChanged', theme } }, '*');
-
-    // Remove the resizing code
-  }
-
-  currentTheme = theme;
-  saveSettings();
-}
-
-function changeLanguage(language) {
-  currentLanguage = language;
-  const codeElement = document.querySelector('#code-container pre code');
-  if (codeElement) {
-    const code = codeElement.textContent;
-    highlightCode(code, language);
-  }
-
-  saveSettings();
-}
-
-function toggleBackground(include) {
-  includeBg = include;
-  saveSettings();
-}
-
-function applyColors() {
-  const codeElement = document.querySelector('#code-container pre');
-  if (codeElement) {
-    const colorData = [];
-    const includeBg = document.getElementById('include-bg').checked;
-    const backgroundColor = includeBg ? window.getComputedStyle(codeElement).backgroundColor : null;
-    const hasLanguageDeclaration = codeElement.textContent.trim().startsWith('$');
-
-    console.log(`backgroundColor: ${backgroundColor}`);
-
-    // Recursively process all child nodes
-    function processNode(node, isFirstLine) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        const parentStyle = window.getComputedStyle(node.parentElement);
-        if (!isFirstLine || !hasLanguageDeclaration) {
-          colorData.push({
-            text: node.textContent,
-            color: parentStyle.color
-          });
-        }
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        let isFirst = isFirstLine;
-        for (let child of node.childNodes) {
-          processNode(child, isFirst);
-          isFirst = false;
-        }
+        // Apply syntax highlighting
+        const highlightedCode = highlighter.codeToHtml(code, { lang: appState.currentLanguage });
+        
+        // Update UI
+        const codeContainer = document.getElementById('code-container');
+        codeContainer.innerHTML = highlightedCode;
+        
+        // Sync UI with current language
+        document.getElementById('language-dropdown').value = appState.currentLanguage;
+      } catch (error) {
+        console.error('Error highlighting code:', error);
+        displayError('Failed to highlight code. Please try again.');
       }
     }
 
-    processNode(codeElement, true);
+    /**
+     * Display error message in code container
+     */
+    function displayError(message) {
+      const codeContainer = document.getElementById('code-container');
+      codeContainer.innerHTML = `<p class="empty-state">⚠️ ${message}</p>`;
+    }
 
-    parent.postMessage({
-      pluginMessage: {
-        type: 'applyDetailedColors',
-        colorData,
-        backgroundColor,
-        hasLanguageDeclaration,
-        includeBg
+    /**
+     * Change syntax highlighting theme
+     */
+    async function changeTheme(theme) {
+      try {
+        const shiki = await loadShiki();
+        const highlighter = await shiki.getHighlighter({
+          theme: theme,
+          langs: [appState.currentLanguage]
+        });
+
+        const codeElement = document.querySelector('#code-container pre code');
+        if (codeElement) {
+          const code = codeElement.textContent;
+          const highlightedCode = highlighter.codeToHtml(code, { lang: appState.currentLanguage });
+          document.getElementById('code-container').innerHTML = highlightedCode;
+
+          // Notify plugin of theme change
+          parent.postMessage({ pluginMessage: { type: 'themeChanged', theme } }, '*');
+        }
+
+        appState.currentTheme = theme;
+        saveSettings();
+      } catch (error) {
+        console.error('Error changing theme:', error);
       }
-    }, '*');
-  }
-}
+    }
 
-// Update event listeners
-document.getElementById('theme-dropdown').addEventListener('change', (event) => {
-  changeTheme(event.target.value);
-});
-
-document.getElementById('language-dropdown').addEventListener('change', (event) => {
-  changeLanguage(event.target.value);
-});
-
-document.getElementById('apply-button').addEventListener('click', applyColors);
-
-document.getElementById('include-bg').addEventListener('change', (event) => {
-  toggleBackground(event.target.checked);
-});
-
-// Update the onmessage handler
-onmessage = async (event) => {
-  const msg = event.data.pluginMessage;
-
-  if (msg.type === 'process-nodes') {
-    // Apply settings first
-    currentTheme = msg.settings.theme;
-    currentLanguage = msg.settings.language;
-    includeBg = msg.settings.includeBg;
-
-    // Process each node
-    const processedNodes = [];
-    for (const node of msg.nodes) {
-      await highlightCode(node.content, node.language);
-      const codeElement = document.querySelector('#code-container pre');
+    /**
+     * Change language for syntax highlighting
+     */
+    function changeLanguage(language) {
+      appState.currentLanguage = language;
+      
+      const codeElement = document.querySelector('#code-container pre code');
       if (codeElement) {
-        const colorData = [];
-        const hasLanguageDeclaration = node.content.trim().startsWith('$');
-        const backgroundColor = includeBg ? window.getComputedStyle(codeElement).backgroundColor : null;
+        const code = codeElement.textContent;
+        highlightCode(code, language);
+      }
 
-        // Process the node's colors
-        function processNode(element, isFirstLine) {
-          if (element.nodeType === Node.TEXT_NODE) {
-            const parentStyle = window.getComputedStyle(element.parentElement);
-            if (!isFirstLine || !hasLanguageDeclaration) {
-              colorData.push({
-                text: element.textContent,
-                color: parentStyle.color
-              });
-            }
-          } else if (element.nodeType === Node.ELEMENT_NODE) {
-            let isFirst = isFirstLine;
-            for (let child of element.childNodes) {
-              processNode(child, isFirst);
-              isFirst = false;
-            }
+      saveSettings();
+    }
+
+    /**
+     * Toggle background setting
+     */
+    function toggleBackground(include) {
+      appState.includeBg = include;
+      saveSettings();
+    }
+
+    /**
+     * Extract color data from syntax-highlighted code
+     */
+    function extractColorData(element, isFirstLine, hasLanguageDeclaration) {
+      const colorData = [];
+      
+      function processNode(node, isFirst) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          // Get the computed color style from parent element
+          const parentStyle = window.getComputedStyle(node.parentElement);
+          
+          // Skip language declaration line if needed
+          if (!isFirst || !hasLanguageDeclaration) {
+            colorData.push({
+              text: node.textContent,
+              color: parentStyle.color
+            });
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          // Process child nodes recursively
+          let isFirstChild = isFirst;
+          for (let child of node.childNodes) {
+            processNode(child, isFirstChild);
+            isFirstChild = false;
           }
         }
+      }
+      
+      processNode(element, isFirstLine);
+      return colorData;
+    }
 
-        processNode(codeElement, true);
-        processedNodes.push({ colorData, hasLanguageDeclaration });
+    /**
+     * Apply syntax highlighting to Figma text layers
+     */
+    function applyColors() {
+      const codeElement = document.querySelector('#code-container pre');
+      if (!codeElement) {
+        return;
+      }
+      
+      // Get UI state
+      const includeBg = document.getElementById('include-bg').checked;
+      const backgroundColor = includeBg ? window.getComputedStyle(codeElement).backgroundColor : null;
+      const hasLanguageDeclaration = codeElement.textContent.trim().startsWith('$');
+      
+      // Extract color data from highlighted code
+      const colorData = extractColorData(codeElement, true, hasLanguageDeclaration);
+      
+      // Send data to plugin
+      parent.postMessage({
+        pluginMessage: {
+          type: 'applyDetailedColors',
+          colorData,
+          backgroundColor,
+          hasLanguageDeclaration,
+          includeBg
+        }
+      }, '*');
+    }
+
+    /**
+     * Process multiple nodes for auto syntax mode
+     */
+    async function processNodes(nodes, settings) {
+      // Apply settings
+      updateUIFromSettings(settings);
+      
+      // Process each node
+      const processedNodes = [];
+      for (const node of nodes) {
+        // Highlight code with appropriate language
+        await highlightCode(node.content, node.language);
+        
+        // Extract color data
+        const codeElement = document.querySelector('#code-container pre');
+        if (codeElement) {
+          const hasLanguageDeclaration = node.content.trim().startsWith('$');
+          const backgroundColor = settings.includeBg ? 
+            window.getComputedStyle(codeElement).backgroundColor : null;
+          
+          const colorData = extractColorData(codeElement, true, hasLanguageDeclaration);
+          processedNodes.push({ colorData, hasLanguageDeclaration });
+        }
+      }
+      
+      // Send processed data back to plugin
+      parent.postMessage({
+        pluginMessage: {
+          type: 'processedNodes',
+          processedNodes,
+          backgroundColor: settings.includeBg ? 
+            window.getComputedStyle(document.querySelector('#code-container pre')).backgroundColor : null,
+          includeBg: settings.includeBg
+        }
+      }, '*');
+    }
+
+    /**
+     * Update UI controls from settings object
+     */
+    function updateUIFromSettings(settings) {
+      if (!settings) return;
+      
+      appState.currentTheme = settings.theme;
+      appState.currentLanguage = settings.language;
+      appState.includeBg = settings.includeBg;
+      
+      document.getElementById('theme-dropdown').value = settings.theme;
+      document.getElementById('language-dropdown').value = settings.language;
+      document.getElementById('include-bg').checked = settings.includeBg;
+    }
+
+    /**
+     * Handle messages from the plugin
+     */
+    async function handlePluginMessage(event) {
+      const msg = event.data.pluginMessage;
+      if (!msg) return;
+      
+      switch (msg.type) {
+        case 'process-nodes':
+          // Process multiple nodes (auto mode)
+          await processNodes(msg.nodes, msg.settings);
+          break;
+          
+        case 'code':
+          // Display code from selection
+          if (msg.settings) {
+            updateUIFromSettings(msg.settings);
+          }
+          
+          await highlightCode(msg.content, msg.language);
+          
+          if (msg.autoRun) {
+            applyColors();
+          }
+          break;
+          
+        case 'no-selection':
+          // Show empty state
+          document.getElementById('code-container').innerHTML = 
+            '<p class="empty-state">ℹ️ Please select at least one text layer</p>';
+          break;
+          
+        case 'loadSettings':
+          // Load saved settings
+          if (msg.settings) {
+            updateUIFromSettings(msg.settings);
+            changeTheme(msg.settings.theme);
+          }
+          break;
+          
+        case 'init':
+          // Plugin initialization
+          break;
       }
     }
 
-    // Send back all processed nodes
-    parent.postMessage({
-      pluginMessage: {
-        type: 'processedNodes',
-        processedNodes,
-        backgroundColor: includeBg ? window.getComputedStyle(document.querySelector('#code-container pre')).backgroundColor : null,
-        includeBg
+    /**
+     * Initialize the plugin UI
+     */
+    async function initPlugin() {
+      try {
+        // Load Shiki
+        await loadShiki();
+        
+        // Set up event listeners
+        document.getElementById('theme-dropdown').addEventListener('change', e => 
+          changeTheme(e.target.value));
+          
+        document.getElementById('language-dropdown').addEventListener('change', e => 
+          changeLanguage(e.target.value));
+          
+        document.getElementById('apply-button').addEventListener('click', 
+          applyColors);
+          
+        document.getElementById('include-bg').addEventListener('change', e => 
+          toggleBackground(e.target.checked));
+        
+        // Register message handler
+        window.onmessage = handlePluginMessage;
+        
+        // Load settings from plugin
+        parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
+      } catch (error) {
+        console.error('Failed to initialize plugin:', error);
+        displayError('Failed to load syntax highlighter. Please try reloading.');
       }
-    }, '*');
-  } else if (msg.type === 'code') {
-    // If settings are provided (for auto-run), apply them first
-    if (msg.settings) {
-      currentTheme = msg.settings.theme;
-      currentLanguage = msg.settings.language;
-      includeBg = msg.settings.includeBg;
     }
 
-    highlightCode(msg.content, msg.language).then(() => {
-      if (msg.autoRun) {
-        applyColors();
-      }
-    });
-  } else if (msg.type === 'no-selection') {
-    document.getElementById('code-container').innerHTML = '<p style="color: #333; display: flex; justify-content: center; align-items: center; height: 100%;">ℹ️ Please select at least one text layer</p>';
-  } else if (msg.type === 'loadSettings') {
-    if (msg.settings) {
-      currentTheme = msg.settings.theme;
-      currentLanguage = msg.settings.language;
-      includeBg = msg.settings.includeBg;
-
-      document.getElementById('theme-dropdown').value = currentTheme;
-      document.getElementById('language-dropdown').value = currentLanguage;
-      document.getElementById('include-bg').checked = includeBg;
-
-      changeTheme(currentTheme);
-      changeLanguage(currentLanguage);
-    }
-  }
-}
-
-// Update the initPlugin function
-async function initPlugin() {
-  try {
-    await loadShiki();
-
-    // Load settings from plugin code
-    parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
-  } catch (error) {
-    console.error('Failed to load Shiki:', error);
-  }
-}
-
-initPlugin();
-
-async function autoApplySyntax() {
-  const codeElement = document.querySelector('#code-container pre');
-  if (codeElement) {
-    applyColors();
-  }
-}
-</script>
+    // Initialize plugin when document is ready
+    window.addEventListener('DOMContentLoaded', initPlugin);
+  </script>
+</body>
+</html>
