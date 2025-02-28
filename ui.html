@@ -411,9 +411,14 @@
     
     /**
      * Shows a notification when language is auto-detected
+     * Shows only one notification at a time
      */
     function showLanguageDetectionNotice(language) {
       const languageName = document.querySelector(`#language-dropdown option[value="${language}"]`)?.textContent || language;
+      
+      // Remove any existing notifications first
+      const existingNotifications = document.querySelectorAll('.language-detection-notice');
+      existingNotifications.forEach(notification => notification.remove());
       
       // Create notification element
       const notification = document.createElement('div');
@@ -510,6 +515,17 @@
       // Get current code
       const codeElement = document.querySelector('#code-container pre code');
       const code = codeElement ? codeElement.textContent : '';
+      
+      // Toggle language dropdown disabled state
+      const languageDropdown = document.getElementById('language-dropdown');
+      languageDropdown.disabled = enabled;
+      
+      // Add visual feedback on disabled state
+      if (enabled) {
+        languageDropdown.classList.add('opacity-75', 'cursor-not-allowed');
+      } else {
+        languageDropdown.classList.remove('opacity-75', 'cursor-not-allowed');
+      }
       
       // Immediately notify the plugin of this change, sending the current code for re-detection
       parent.postMessage({
@@ -634,10 +650,26 @@
       appState.includeBg = settings.includeBg;
       appState.autoDetect = settings.autoDetect !== undefined ? settings.autoDetect : true;
       
-      document.getElementById('theme-dropdown').value = settings.theme;
-      document.getElementById('language-dropdown').value = settings.language;
-      document.getElementById('include-bg').checked = settings.includeBg;
-      document.getElementById('auto-detect').checked = appState.autoDetect;
+      // Update UI elements
+      const themeDropdown = document.getElementById('theme-dropdown');
+      const languageDropdown = document.getElementById('language-dropdown');
+      const includeBgCheckbox = document.getElementById('include-bg');
+      const autoDetectCheckbox = document.getElementById('auto-detect');
+      
+      themeDropdown.value = settings.theme;
+      languageDropdown.value = settings.language;
+      includeBgCheckbox.checked = settings.includeBg;
+      autoDetectCheckbox.checked = appState.autoDetect;
+      
+      // Set language dropdown disabled state based on auto-detect setting
+      languageDropdown.disabled = appState.autoDetect;
+      
+      // Update visual styles for disabled state
+      if (appState.autoDetect) {
+        languageDropdown.classList.add('opacity-75', 'cursor-not-allowed');
+      } else {
+        languageDropdown.classList.remove('opacity-75', 'cursor-not-allowed');
+      }
     }
 
     /**
