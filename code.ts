@@ -5,6 +5,7 @@ interface SyntaxerSettings {
   theme: string;
   language: string;
   includeBg: boolean;
+  autoDetect: boolean;
 }
 
 interface TextNodeContent {
@@ -42,7 +43,8 @@ interface UIMessage {
 const DEFAULT_SETTINGS: SyntaxerSettings = {
   theme: 'light-plus',
   language: 'python',
-  includeBg: false
+  includeBg: false,
+  autoDetect: true
 };
 
 // Language detection regex
@@ -82,16 +84,18 @@ function getSelectedTextNodes(): TextNode[] {
 }
 
 /**
- * Extracts language from text content if it has a language declaration
+ * Extracts language from text content if it has a language declaration or auto-detects
  */
-function detectLanguage(text: string, defaultLanguage: string | null): string {
+function detectLanguage(text: string, defaultLanguage: string | null, autoDetect: boolean = true): string {
   // First check for explicit language declaration
   const declaredLanguage = text.match(LANGUAGE_DECLARATION_REGEX)?.[1]?.toLowerCase();
   if (declaredLanguage) return declaredLanguage;
   
-  // If no explicit declaration, try to auto-detect
-  const detectedLanguage = autoDetectLanguage(text);
-  if (detectedLanguage) return detectedLanguage;
+  // If no explicit declaration and auto-detect is enabled, try to auto-detect
+  if (autoDetect) {
+    const detectedLanguage = autoDetectLanguage(text);
+    if (detectedLanguage) return detectedLanguage;
+  }
   
   // Fall back to provided default or global default
   return defaultLanguage || DEFAULT_SETTINGS.language;
@@ -149,26 +153,29 @@ async function getPluginSettings(): Promise<SyntaxerSettings> {
   return {
     theme: settings?.theme || DEFAULT_SETTINGS.theme,
     language: settings?.language || DEFAULT_SETTINGS.language,
-    includeBg: settings?.includeBg || DEFAULT_SETTINGS.includeBg
+    includeBg: settings?.includeBg || DEFAULT_SETTINGS.includeBg,
+    autoDetect: settings?.autoDetect !== undefined ? settings.autoDetect : DEFAULT_SETTINGS.autoDetect
   };
 }
 
 /**
  * Checks current selection and sends data to UI
  */
-function checkSelection() {
+async function checkSelection() {
   const textNodes = getSelectedTextNodes();
 
   if (textNodes.length > 0) {
     const firstTextNode = textNodes[0];
     const code = firstTextNode.characters;
-    const language = detectLanguage(code, null);
+    const settings = await getPluginSettings();
+    const language = detectLanguage(code, settings.language, settings.autoDetect);
 
     figma.ui.postMessage({
       type: 'code',
       content: code,
       language: language,
-      selectionCount: textNodes.length
+      selectionCount: textNodes.length,
+      autoDetect: settings.autoDetect
     });
   } else {
     figma.ui.postMessage({ type: 'no-selection' });
@@ -277,12 +284,15 @@ function applyTextColors(
 
 /**
  * Processes auto syntax highlighting command
+ * @param useAutoDetect - Whether to use automatic language detection
  */
-async function handleAutoSyntaxCommand() {
+async function handleAutoSyntaxCommand(useAutoDetect: boolean = false) {
   const textNodes = getSelectedTextNodes();
 
   if (textNodes.length > 0) {
     const settings = await getPluginSettings();
+    // Override auto-detect setting if explicitly requested
+    const shouldAutoDetect = useAutoDetect || settings.autoDetect;
     
     // Show UI temporarily to process the syntax highlighting
     figma.showUI(__html__, { visible: false });
@@ -292,9 +302,12 @@ async function handleAutoSyntaxCommand() {
       type: 'process-nodes',
       nodes: textNodes.map(node => ({
         content: node.characters,
-        language: detectLanguage(node.characters, settings.language)
+        language: detectLanguage(node.characters, settings.language, shouldAutoDetect)
       })),
-      settings
+      settings: {
+        ...settings,
+        autoDetect: shouldAutoDetect
+      }
     });
   } else {
     figma.notify('Please select at least one text layer');
@@ -308,13 +321,14 @@ async function handleAutoSyntaxCommand() {
 async function handleUIMessages(msg: UIMessage) {
   switch (msg.type) {
     case 'init':
-      if (figma.command !== 'auto-syntax') {
-        checkSelection();
+      if (figma.command !== 'auto-syntax' && figma.command !== 'auto-detect-syntax') {
+        await checkSelection();
       }
       break;
       
     case 'applyDetailedColors':
-      await handleApplyColors();
+      // If autoDetect is explicitly specified, use it
+      await handleApplyColors(msg.autoDetect);
       break;
       
     case 'processedNodes':
@@ -334,26 +348,40 @@ async function handleUIMessages(msg: UIMessage) {
         await figma.clientStorage.setAsync('pluginSettings', msg.settings);
       }
       break;
+      
+    case 'toggleAutoDetect':
+      // Update the autoDetect setting
+      const settings = await getPluginSettings();
+      settings.autoDetect = Boolean(msg.autoDetect);
+      await figma.clientStorage.setAsync('pluginSettings', settings);
+      break;
   }
 }
 
 /**
  * Handles applying colors to selected nodes
+ * @param autoDetect - Whether to override the saved auto-detect setting
  */
-async function handleApplyColors() {
+async function handleApplyColors(autoDetect?: boolean) {
   const textNodes = getSelectedTextNodes();
 
   if (textNodes.length > 0) {
     const settings = await getPluginSettings();
+    
+    // Use provided autoDetect if specified, otherwise use the stored setting
+    const shouldAutoDetect = autoDetect !== undefined ? autoDetect : settings.autoDetect;
 
     // Process all nodes at once
     figma.ui.postMessage({
       type: 'process-nodes',
       nodes: textNodes.map(node => ({
         content: node.characters,
-        language: detectLanguage(node.characters, settings.language)
+        language: detectLanguage(node.characters, settings.language, shouldAutoDetect)
       })),
-      settings
+      settings: {
+        ...settings,
+        autoDetect: shouldAutoDetect
+      }
     });
   } else {
     figma.notify('Please select at least one text layer');
@@ -393,15 +421,18 @@ async function handleProcessedNodes(msg: UIMessage) {
 async function main() {
   // Handle different plugin commands
   if (figma.command === 'auto-syntax') {
-    await handleAutoSyntaxCommand();
+    await handleAutoSyntaxCommand(false); // Use saved auto-detect preference
+  } else if (figma.command === 'auto-detect-syntax') {
+    await handleAutoSyntaxCommand(true); // Force auto-detection
   } else {
+    // Show manual UI
     figma.showUI(__html__, { width: 600, height: 500 });
-    checkSelection();
+    await checkSelection();
   }
 
   // Set up event listeners
   figma.on('selectionchange', () => {
-    if (figma.command !== 'auto-syntax') {
+    if (figma.command !== 'auto-syntax' && figma.command !== 'auto-detect-syntax') {
       checkSelection();
     }
   });

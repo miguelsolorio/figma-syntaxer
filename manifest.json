@@ -18,6 +18,10 @@
     {
       "name": "Auto Apply Syntax",
       "command": "auto-syntax"
+    },
+    {
+      "name": "Auto Apply with Detection",
+      "command": "auto-detect-syntax"
     }
   ],
   "networkAccess": {
