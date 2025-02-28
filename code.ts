@@ -355,6 +355,16 @@ async function handleUIMessages(msg: UIMessage) {
       const settings = await getPluginSettings();
       settings.autoDetect = Boolean(msg.autoDetect);
       await figma.clientStorage.setAsync('pluginSettings', settings);
+      
+      // If there's content to analyze, re-detect and send back the language
+      if (msg.content) {
+        const detectedLanguage = detectLanguage(msg.content, settings.language, settings.autoDetect);
+        figma.ui.postMessage({
+          type: 'detectedLanguage',
+          language: detectedLanguage,
+          content: msg.content
+        });
+      }
       break;
   }
 }
