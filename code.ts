@@ -48,6 +48,31 @@ const DEFAULT_SETTINGS: SyntaxerSettings = {
 // Language detection regex
 const LANGUAGE_DECLARATION_REGEX = /^\$([\w-]+)/;
 
+// Common language patterns for auto-detection
+const LANGUAGE_PATTERNS = [
+  { language: 'javascript', patterns: [/const\s+\w+\s*=/, /function\s+\w+\s*\(/, /export\s+(?:default|const)/, /import\s+.*\s+from/, /^\s*\/\//, /^\s*console\.log\(/] },
+  { language: 'typescript', patterns: [/:\s*(?:string|number|boolean|any)\s*[,=)]/, /interface\s+\w+/, /class\s+\w+\s+implements/, /<.*>\(.*\)/, /import\s+{.*}\s+from/] },
+  { language: 'html', patterns: [/<html/, /<div/, /<body/, /<script/, /<head/, /<img/, /<a\s+href/] },
+  { language: 'css', patterns: [/\s*{[\s\S]*?}/, /\s*:\s*.*;/, /@media/, /#[\w-]+\s*{/, /\.[\w-]+\s*{/] },
+  { language: 'python', patterns: [/def\s+\w+\s*\(.*\):/, /import\s+[\w.]+/, /from\s+[\w.]+\s+import/, /class\s+\w+/, /if\s+.*:/, /^\s*#.*/, /print\(/] },
+  { language: 'java', patterns: [/public\s+(?:class|void|static)/, /private\s+\w+/, /protected\s+\w+/, /class\s+\w+\s+(?:extends|implements)/, /import\s+java.*/] },
+  { language: 'c', patterns: [/#include\s+<.*>/, /int\s+main\s*\(\s*(?:void|int argc, char \*\*argv)\s*\)/, /printf\(/] },
+  { language: 'cpp', patterns: [/#include\s+<.*>/, /std::\w+/, /namespace\s+\w+/, /template\s*<.*>/] },
+  { language: 'csharp', patterns: [/using\s+System;/, /namespace\s+\w+/, /public\s+class\s+\w+/, /\w+\s*:\s*\w+Class/] },
+  { language: 'php', patterns: [/<\?php/, /\$\w+\s*=/, /function\s+\w+\s*\(/, /echo\s+/] },
+  { language: 'ruby', patterns: [/def\s+\w+/, /require\s+['"].*['"]/, /class\s+\w+\s+</, /@\w+/, /puts\s+/] },
+  { language: 'rust', patterns: [/fn\s+\w+/, /let\s+mut/, /use\s+std::/, /struct\s+\w+/, /impl\s+\w+/] },
+  { language: 'go', patterns: [/func\s+\w+/, /package\s+\w+/, /import\s+\(/, /type\s+\w+\s+struct/] },
+  { language: 'swift', patterns: [/import\s+\w+/, /func\s+\w+/, /var\s+\w+\s*:\s*\w+/, /class\s+\w+\s*{/, /let\s+\w+\s*=/] },
+  { language: 'sql', patterns: [/SELECT\s+.*\s+FROM/, /INSERT\s+INTO/, /UPDATE\s+.*\s+SET/, /CREATE\s+TABLE/, /ALTER\s+TABLE/i] },
+  { language: 'json', patterns: [/^\s*{[\s\S]*".*"\s*:[\s\S]*}$/, /^\s*\[[\s\S]*{[\s\S]*".*"\s*:[\s\S]*}[\s\S]*\]$/] },
+  { language: 'xml', patterns: [/<\?xml/, /<\w+>.*<\/\w+>/, /<\w+\s+.*?\/>/] },
+  { language: 'yaml', patterns: [/^\w+:\s*$/, /^\s*-\s+\w+:/, /^\s*\w+:\s+.*$/] },
+  { language: 'markdown', patterns: [/^#\s+.*$/, /^#+\s+.*$/, /\[.*\]\(.*\)/, /\*\*.*\*\*/, /`{3}[\s\S]*`{3}/] },
+  { language: 'bash', patterns: [/^#!/, /if\s+\[\s+.*\s+\]/, /for\s+\w+\s+in/, /while\s+\[\s+.*\s+\]/, /function\s+\w+\s*\(/, /echo\s+"/] },
+  { language: 'powershell', patterns: [/\$\w+\s*=/, /Get-\w+/, /Set-\w+/, /Write-\w+/, /\[.*\]::/] }
+];
+
 /**
  * Gets text nodes from current selection
  */
@@ -60,7 +85,60 @@ function getSelectedTextNodes(): TextNode[] {
  * Extracts language from text content if it has a language declaration
  */
 function detectLanguage(text: string, defaultLanguage: string | null): string {
-  return text.match(LANGUAGE_DECLARATION_REGEX)?.[1]?.toLowerCase() || defaultLanguage || DEFAULT_SETTINGS.language;
+  // First check for explicit language declaration
+  const declaredLanguage = text.match(LANGUAGE_DECLARATION_REGEX)?.[1]?.toLowerCase();
+  if (declaredLanguage) return declaredLanguage;
+  
+  // If no explicit declaration, try to auto-detect
+  const detectedLanguage = autoDetectLanguage(text);
+  if (detectedLanguage) return detectedLanguage;
+  
+  // Fall back to provided default or global default
+  return defaultLanguage || DEFAULT_SETTINGS.language;
+}
+
+/**
+ * Automatically detects the programming language based on code content
+ */
+function autoDetectLanguage(code: string): string | null {
+  if (!code || code.trim().length < 10) {
+    return null; // Too short to reliably detect
+  }
+  
+  // Remove leading/trailing whitespace
+  const normalizedCode = code.trim();
+  
+  // Check against known patterns for each language
+  const scores: Record<string, number> = {};
+  
+  for (const { language, patterns } of LANGUAGE_PATTERNS) {
+    let matchCount = 0;
+    
+    for (const pattern of patterns) {
+      if (pattern.test(normalizedCode)) {
+        matchCount++;
+      }
+    }
+    
+    if (matchCount > 0) {
+      // Calculate a score based on number of matches and pattern specificity
+      scores[language] = matchCount * (1 + patterns.length * 0.1);
+    }
+  }
+  
+  // Find language with highest score
+  let bestMatch = null;
+  let highestScore = 0;
+  
+  for (const [language, score] of Object.entries(scores)) {
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = language;
+    }
+  }
+  
+  // Only return if we have a reasonable confidence
+  return highestScore >= 1 ? bestMatch : null;
 }
 
 /**

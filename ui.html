@@ -36,6 +36,12 @@
       height: 100%;
       text-align: center;
     }
+    
+    .language-detection-notice {
+      position: relative;
+      z-index: 10;
+      margin: 8px;
+    }
   </style>
 </head>
 <body>
@@ -364,6 +370,7 @@
       }
 
       // Update current language
+      const previousLanguage = appState.currentLanguage;
       appState.currentLanguage = language || appState.currentLanguage;
 
       try {
@@ -383,10 +390,48 @@
         
         // Sync UI with current language
         document.getElementById('language-dropdown').value = appState.currentLanguage;
+        
+        // Show notification if language was auto-detected and changed
+        if (language && language !== previousLanguage && !code.trim().startsWith('$')) {
+          showLanguageDetectionNotice(language);
+        }
       } catch (error) {
         console.error('Error highlighting code:', error);
         displayError('Failed to highlight code. Please try again.');
       }
+    }
+    
+    /**
+     * Shows a notification when language is auto-detected
+     */
+    function showLanguageDetectionNotice(language) {
+      const languageName = document.querySelector(`#language-dropdown option[value="${language}"]`)?.textContent || language;
+      
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = 'language-detection-notice';
+      notification.innerHTML = `
+        <div class="flex items-center bg-blue-50 p-3 rounded mb-3 text-sm border border-blue-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+          <span>Detected <strong>${languageName}</strong> code</span>
+          <button class="ml-auto text-blue-500 hover:text-blue-700 focus:outline-none" onclick="this.parentElement.remove()">
+            &times;
+          </button>
+        </div>
+      `;
+      
+      // Add before the code container
+      const codeContainer = document.getElementById('code-container');
+      codeContainer.parentNode.insertBefore(notification, codeContainer);
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      }, 5000);
     }
 
     /**
