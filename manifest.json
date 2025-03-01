@@ -10,6 +10,20 @@
     "figma"
   ],
   "ui": "ui.html",
+  "menu": [
+    {
+      "name": "Manual Syntax",
+      "command": "manual-syntax"
+    },
+    {
+      "name": "Auto Apply Syntax",
+      "command": "auto-syntax"
+    },
+    {
+      "name": "Auto Apply & Detect Syntax",
+      "command": "auto-detect-syntax"
+    }
+  ],
   "networkAccess": {
     "allowedDomains": [
       "https://figma.com",
