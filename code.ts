@@ -160,6 +160,50 @@ async function getPluginSettings(): Promise<SyntaxerSettings> {
 }
 
 /**
+ * Detect language from layer name if it matches a pattern like #python
+ */
+function detectLanguageFromLayerName(textNode: TextNode, autoDetect: boolean): string | null {
+  // Only try to detect from layer name if auto-detect is disabled
+  if (autoDetect) return null;
+  
+  // Check if name follows pattern like "#python" or "#javascript"
+  if (textNode.name && textNode.name.startsWith('#')) {
+    const nameLanguage = textNode.name.substring(1).toLowerCase().trim();
+    
+    // Get all available language options from code
+    const supportedLanguages = LANGUAGE_PATTERNS.map(pattern => pattern.language);
+    
+    // Check if the extracted language is in our supported list
+    if (supportedLanguages.includes(nameLanguage)) {
+      // Found a match in our supported languages
+      return nameLanguage;
+    }
+    
+    // Special cases for common aliases
+    const languageAliases: Record<string, string> = {
+      'js': 'javascript',
+      'ts': 'typescript',
+      'cs': 'csharp',
+      'py': 'python',
+      'rb': 'ruby',
+      'sh': 'bash',
+      'shell': 'bash',
+      'yml': 'yaml',
+      'htm': 'html',
+      'jsx': 'jsx',
+      'tsx': 'tsx'
+    };
+    
+    // Check aliases
+    if (nameLanguage in languageAliases) {
+      return languageAliases[nameLanguage];
+    }
+  }
+  
+  return null;
+}
+
+/**
  * Checks current selection and sends data to UI
  */
 async function checkSelection() {
@@ -169,14 +213,20 @@ async function checkSelection() {
     const firstTextNode = textNodes[0];
     const code = firstTextNode.characters;
     const settings = await getPluginSettings();
-    const language = detectLanguage(code, settings.language, settings.autoDetect);
+    
+    // Try to get language from node name if auto-detect is disabled
+    const nameLanguage = detectLanguageFromLayerName(firstTextNode, settings.autoDetect);
+    
+    // If name-based detection successful, use that language, otherwise fall back to content detection
+    const language = nameLanguage || detectLanguage(code, settings.language, settings.autoDetect);
 
     figma.ui.postMessage({
       type: 'code',
       content: code,
       language: language,
       selectionCount: textNodes.length,
-      autoDetect: settings.autoDetect
+      autoDetect: settings.autoDetect,
+      layerName: firstTextNode.name // Send layer name for UI display
     });
   } else {
     figma.ui.postMessage({ type: 'no-selection' });
