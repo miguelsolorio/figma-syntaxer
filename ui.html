@@ -43,7 +43,7 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
-      max-width: 90%;
+      width: 94%;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
   </style>
@@ -405,7 +405,7 @@
 
         // Show notification if language was auto-detected and changed
         if (appState.autoDetect && language && language !== previousLanguage && !code.trim().startsWith('$')) {
-          showLanguageDetectionNotice(language);
+          showLanguageDetectionNotice(language, false);
         }
       } catch (error) {
         console.error('Error highlighting code:', error);
@@ -414,10 +414,12 @@
     }
 
     /**
-     * Shows a notification when language is auto-detected
+     * Shows a notification when language is auto-detected or determined from layer name
      * Shows only one notification at a time
+     * @param language The detected language
+     * @param isFromLayerName Whether the language was detected from layer name
      */
-    function showLanguageDetectionNotice(language) {
+    function showLanguageDetectionNotice(language, isFromLayerName = false) {
       const languageName = document.querySelector(`#language-dropdown option[value="${language}"]`)?.textContent || language;
 
       // Remove any existing notifications first
@@ -427,15 +429,27 @@
       // Create notification element
       const notification = document.createElement('div');
       notification.className = 'language-detection-notice';
+
+      // Different message based on detection method
+      const message = isFromLayerName
+        ? `Language set to <strong>${languageName}</strong> (#${language})`
+        : `Detected <strong>${languageName}</strong> code`;
+
       notification.innerHTML = `
-        <div class="flex items-center bg-blue-50 p-3 rounded text-sm border border-blue-200">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z" clip-rule="evenodd" />
+        <div class="w-full flex items-center bg-blue-100 border border-blue-300 text-blue-900 px-4 py-3 rounded-lg shadow-md text-sm gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 stroke-blue-600"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
           </svg>
-          <span>Detected <strong>${languageName}</strong> code</span>
-          <button class="ml-auto text-blue-500 hover:text-blue-700 focus:outline-none" onclick="document.querySelector('.language-detection-notice').remove()">
-            &times;
-          </button>
+          <span>${message}</span>
         </div>
       `;
 
@@ -522,6 +536,8 @@
       // Toggle language dropdown disabled state
       const languageDropdown = document.getElementById('language-dropdown');
       languageDropdown.disabled = enabled;
+      // set title attribute to show tooltip
+      languageDropdown.title = enabled ? 'Disabled when auto-detect is enabled' : '';
 
       // Add visual feedback on disabled state
       if (enabled) {
@@ -643,6 +659,13 @@
     }
 
     /**
+     * Check if the current layer has a language defined in its name
+     */
+    function hasLanguageInLayerName(layerName) {
+      return layerName && layerName.startsWith('#');
+    }
+
+    /**
      * Update UI controls from settings object
      */
     function updateUIFromSettings(settings) {
@@ -696,6 +719,31 @@
             // Update just the autoDetect setting if provided
             appState.autoDetect = msg.autoDetect;
             document.getElementById('auto-detect').checked = msg.autoDetect;
+          }
+
+          // Get language dropdown element
+          const languageDropdown = document.getElementById('language-dropdown');
+
+          // Update language dropdown to match the detected/preferred language
+          // This ensures the UI language selector matches what was detected from #lang
+          if (msg.language) {
+            languageDropdown.value = msg.language;
+            appState.currentLanguage = msg.language;
+          }
+
+          // If language was determined from layer name, disable language selector regardless of auto-detect
+          if (msg.isLanguageFromLayerName) {
+            languageDropdown.disabled = true;
+            languageDropdown.classList.add('opacity-40', 'cursor-not-allowed');
+
+            // Show a notification that language is determined by layer name
+            // showLanguageDetectionNotice(msg.language, true);
+          } else {
+            // Normal behavior - only disable if auto-detect is on
+            languageDropdown.disabled = appState.autoDetect;
+            if (!appState.autoDetect) {
+              languageDropdown.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
           }
 
           await highlightCode(msg.content, msg.language);

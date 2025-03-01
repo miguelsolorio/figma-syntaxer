@@ -38,6 +38,8 @@ interface UIMessage {
   autoRun?: boolean;
   nodes?: TextNodeContent[];
   autoDetect?: boolean;
+  layerName?: string;
+  isLanguageFromLayerName?: boolean;
 }
 
 // Default settings
@@ -161,10 +163,13 @@ async function getPluginSettings(): Promise<SyntaxerSettings> {
 
 /**
  * Detect language from layer name if it matches a pattern like #python
+ * @param textNode The text node to check
+ * @param autoDetect Whether auto-detect is enabled (used only by legacy code paths)
+ * @returns The detected language or null if none found
  */
 function detectLanguageFromLayerName(textNode: TextNode, autoDetect: boolean): string | null {
-  // Only try to detect from layer name if auto-detect is disabled
-  if (autoDetect) return null;
+  // The autoDetect parameter is still used by some code paths, but for #lang syntax
+  // we'll always check the layer name regardless of the autoDetect setting
   
   // Check if name follows pattern like "#python" or "#javascript"
   if (textNode.name && textNode.name.startsWith('#')) {
@@ -200,6 +205,9 @@ function detectLanguageFromLayerName(textNode: TextNode, autoDetect: boolean): s
     }
   }
   
+  // For backward compatibility, still check autoDetect
+  if (autoDetect) return null;
+  
   return null;
 }
 
@@ -214,11 +222,15 @@ async function checkSelection() {
     const code = firstTextNode.characters;
     const settings = await getPluginSettings();
     
-    // Try to get language from node name if auto-detect is disabled
-    const nameLanguage = detectLanguageFromLayerName(firstTextNode, settings.autoDetect);
+    // Always check for #lang syntax in node name first, regardless of auto-detect setting
+    const nameLanguage = firstTextNode.name && firstTextNode.name.startsWith('#') ?
+                        detectLanguageFromLayerName(firstTextNode, false) : null;
     
     // If name-based detection successful, use that language, otherwise fall back to content detection
     const language = nameLanguage || detectLanguage(code, settings.language, settings.autoDetect);
+    
+    // Track whether language was determined from layer name
+    const isLanguageFromLayerName = !!nameLanguage;
 
     figma.ui.postMessage({
       type: 'code',
@@ -226,7 +238,8 @@ async function checkSelection() {
       language: language,
       selectionCount: textNodes.length,
       autoDetect: settings.autoDetect,
-      layerName: firstTextNode.name // Send layer name for UI display
+      layerName: firstTextNode.name, // Send layer name for UI display
+      isLanguageFromLayerName: isLanguageFromLayerName // Indicate if language came from layer name
     });
   } else {
     figma.ui.postMessage({ type: 'no-selection' });
@@ -348,13 +361,24 @@ async function handleAutoSyntaxCommand(useAutoDetect: boolean = false) {
     // Show UI temporarily to process the syntax highlighting
     figma.showUI(__html__, { visible: false });
 
-    // Send all nodes to be processed
+    // Send all nodes to be processed with proper language detection
     figma.ui.postMessage({
       type: 'process-nodes',
-      nodes: textNodes.map(node => ({
-        content: node.characters,
-        language: detectLanguage(node.characters, settings.language, shouldAutoDetect)
-      })),
+      nodes: textNodes.map(node => {
+        // First check if this node has a language defined in its name (even if auto-detect is enabled)
+        const nameLanguage = node.name && node.name.startsWith('#') ? 
+                            detectLanguageFromLayerName(node, false) : null;
+        
+        // If #lang syntax is used in the layer name, use that language regardless of auto-detect setting
+        // Otherwise, fall back to normal detection logic
+        const language = nameLanguage || 
+                        detectLanguage(node.characters, settings.language, shouldAutoDetect);
+        
+        return {
+          content: node.characters,
+          language: language
+        };
+      }),
       settings: {
         ...settings,
         autoDetect: shouldAutoDetect
@@ -435,10 +459,20 @@ async function handleApplyColors(autoDetect?: boolean) {
     // Process all nodes at once
     figma.ui.postMessage({
       type: 'process-nodes',
-      nodes: textNodes.map(node => ({
-        content: node.characters,
-        language: detectLanguage(node.characters, settings.language, shouldAutoDetect)
-      })),
+      nodes: textNodes.map(node => {
+        // Check for #lang syntax in node name (regardless of auto-detect setting)
+        const nameLanguage = node.name && node.name.startsWith('#') ?
+                           detectLanguageFromLayerName(node, false) : null;
+        
+        // Use name-defined language first, then fall back to content detection
+        const language = nameLanguage || 
+                       detectLanguage(node.characters, settings.language, shouldAutoDetect);
+        
+        return {
+          content: node.characters,
+          language: language
+        };
+      }),
       settings: {
         ...settings,
         autoDetect: shouldAutoDetect
