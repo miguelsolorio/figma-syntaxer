@@ -20,7 +20,7 @@
       "command": "auto-syntax"
     },
     {
-      "name": "Auto Apply with Detection",
+      "name": "Auto Apply & Detect Syntax",
       "command": "auto-detect-syntax"
     }
   ],
