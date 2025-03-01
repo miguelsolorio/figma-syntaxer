@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Figma Syntaxer</title>
-  
+
   <!-- External CSS dependencies -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
-  
+
   <!-- Custom styles -->
   <style>
     #code-container > pre {
@@ -27,7 +27,7 @@
       padding-right: 2rem;
       background-repeat: no-repeat;
     }
-    
+
     .empty-state {
       color: #333;
       display: flex;
@@ -36,7 +36,7 @@
       height: 100%;
       text-align: center;
     }
-    
+
     .language-detection-notice {
       position: fixed;
       bottom: 16px;
@@ -88,7 +88,7 @@
           <option value="vitesse-dark">Vitesse Dark</option>
         </optgroup>
       </select>
-      
+
       <!-- Language Selector -->
       <select id="language-dropdown" class="w-1/4 p-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat">
         <!-- Web Languages -->
@@ -100,7 +100,7 @@
           <option value="jsx">JSX</option>
           <option value="tsx">TSX</option>
         </optgroup>
-        
+
         <!-- Programming Languages -->
         <optgroup label="Programming">
           <option value="c">C</option>
@@ -115,7 +115,7 @@
           <option value="rust">Rust</option>
           <option value="swift">Swift</option>
         </optgroup>
-        
+
         <!-- Data & Markup Languages -->
         <optgroup label="Data & Markup">
           <option value="json">JSON</option>
@@ -124,7 +124,7 @@
           <option value="xml">XML</option>
           <option value="toml">TOML</option>
         </optgroup>
-        
+
         <!-- Other Languages -->
         <optgroup label="Other">
           <option value="bash">Bash</option>
@@ -133,7 +133,7 @@
           <option value="dockerfile">Dockerfile</option>
           <option value="shellscript">Shell Script</option>
         </optgroup>
-        
+
         <!-- All Other Languages (Collapsed) -->
         <optgroup label="More Languages">
           <option value="abap">ABAP</option>
@@ -288,25 +288,25 @@
           <option value="zenscript">ZenScript</option>
         </optgroup>
       </select>
-      
+
       <!-- Toggle Options -->
-      <div class="flex items-center space-x-4">
-        <div class="flex items-center">
-          <input type="checkbox" id="include-bg" class="mr-2">
-          <label for="include-bg">Background</label>
-        </div>
-        <div class="flex items-center">
-          <input type="checkbox" id="auto-detect" class="mr-2">
-          <label for="auto-detect">Auto-detect</label>
-        </div>
+      <div class="flex flex-col space-y-2">
+      <div class="flex items-center">
+        <input type="checkbox" id="include-bg" class="mr-2">
+        <label for="include-bg">Background</label>
       </div>
-      
+      <div class="flex items-center">
+        <input type="checkbox" id="auto-detect" class="mr-2">
+        <label for="auto-detect">Auto-detect</label>
+      </div>
+      </div>
+
       <!-- Apply Button -->
       <button id="apply-button" class="w-1/5 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
         Apply
       </button>
     </div>
-    
+
     <!-- Code Preview Container -->
     <div id="code-container" class="flex-grow overflow-auto">
       <!-- Code will be inserted here -->
@@ -395,14 +395,14 @@
 
         // Apply syntax highlighting
         const highlightedCode = highlighter.codeToHtml(code, { lang: appState.currentLanguage });
-        
+
         // Update UI
         const codeContainer = document.getElementById('code-container');
         codeContainer.innerHTML = highlightedCode;
-        
+
         // Sync UI with current language
         document.getElementById('language-dropdown').value = appState.currentLanguage;
-        
+
         // Show notification if language was auto-detected and changed
         if (appState.autoDetect && language && language !== previousLanguage && !code.trim().startsWith('$')) {
           showLanguageDetectionNotice(language);
@@ -412,18 +412,18 @@
         displayError('Failed to highlight code. Please try again.');
       }
     }
-    
+
     /**
      * Shows a notification when language is auto-detected
      * Shows only one notification at a time
      */
     function showLanguageDetectionNotice(language) {
       const languageName = document.querySelector(`#language-dropdown option[value="${language}"]`)?.textContent || language;
-      
+
       // Remove any existing notifications first
       const existingNotifications = document.querySelectorAll('.language-detection-notice');
       existingNotifications.forEach(notification => notification.remove());
-      
+
       // Create notification element
       const notification = document.createElement('div');
       notification.className = 'language-detection-notice';
@@ -438,10 +438,10 @@
           </button>
         </div>
       `;
-      
+
       // Add to the body instead of before code container
       document.body.appendChild(notification);
-      
+
       // Auto-remove after 5 seconds
       setTimeout(() => {
         if (notification.parentNode) {
@@ -491,7 +491,7 @@
      */
     function changeLanguage(language) {
       appState.currentLanguage = language;
-      
+
       const codeElement = document.querySelector('#code-container pre code');
       if (codeElement) {
         const code = codeElement.textContent;
@@ -508,28 +508,28 @@
       appState.includeBg = include;
       saveSettings();
     }
-    
+
     /**
      * Toggle auto-detect setting
      */
     function toggleAutoDetect(enabled) {
       appState.autoDetect = enabled;
-      
+
       // Get current code
       const codeElement = document.querySelector('#code-container pre code');
       const code = codeElement ? codeElement.textContent : '';
-      
+
       // Toggle language dropdown disabled state
       const languageDropdown = document.getElementById('language-dropdown');
       languageDropdown.disabled = enabled;
-      
+
       // Add visual feedback on disabled state
       if (enabled) {
         languageDropdown.classList.add('opacity-40', 'cursor-not-allowed');
       } else {
         languageDropdown.classList.remove('opacity-40', 'cursor-not-allowed');
       }
-      
+
       // Immediately notify the plugin of this change, sending the current code for re-detection
       parent.postMessage({
         pluginMessage: {
@@ -538,7 +538,7 @@
           content: code
         }
       }, '*');
-      
+
       saveSettings();
     }
 
@@ -547,12 +547,12 @@
      */
     function extractColorData(element, isFirstLine, hasLanguageDeclaration) {
       const colorData = [];
-      
+
       function processNode(node, isFirst) {
         if (node.nodeType === Node.TEXT_NODE) {
           // Get the computed color style from parent element
           const parentStyle = window.getComputedStyle(node.parentElement);
-          
+
           // Skip language declaration line if needed
           if (!isFirst || !hasLanguageDeclaration) {
             colorData.push({
@@ -569,7 +569,7 @@
           }
         }
       }
-      
+
       processNode(element, isFirstLine);
       return colorData;
     }
@@ -582,16 +582,16 @@
       if (!codeElement) {
         return;
       }
-      
+
       // Get UI state
       const includeBg = document.getElementById('include-bg').checked;
       const autoDetect = document.getElementById('auto-detect').checked;
       const backgroundColor = includeBg ? window.getComputedStyle(codeElement).backgroundColor : null;
       const hasLanguageDeclaration = codeElement.textContent.trim().startsWith('$');
-      
+
       // Extract color data from highlighted code
       const colorData = extractColorData(codeElement, true, hasLanguageDeclaration);
-      
+
       // Send data to plugin
       parent.postMessage({
         pluginMessage: {
@@ -611,31 +611,31 @@
     async function processNodes(nodes, settings) {
       // Apply settings
       updateUIFromSettings(settings);
-      
+
       // Process each node
       const processedNodes = [];
       for (const node of nodes) {
         // Highlight code with appropriate language
         await highlightCode(node.content, node.language);
-        
+
         // Extract color data
         const codeElement = document.querySelector('#code-container pre');
         if (codeElement) {
           const hasLanguageDeclaration = node.content.trim().startsWith('$');
-          const backgroundColor = settings.includeBg ? 
+          const backgroundColor = settings.includeBg ?
             window.getComputedStyle(codeElement).backgroundColor : null;
-          
+
           const colorData = extractColorData(codeElement, true, hasLanguageDeclaration);
           processedNodes.push({ colorData, hasLanguageDeclaration });
         }
       }
-      
+
       // Send processed data back to plugin
       parent.postMessage({
         pluginMessage: {
           type: 'processedNodes',
           processedNodes,
-          backgroundColor: settings.includeBg ? 
+          backgroundColor: settings.includeBg ?
             window.getComputedStyle(document.querySelector('#code-container pre')).backgroundColor : null,
           includeBg: settings.includeBg
         }
@@ -647,26 +647,26 @@
      */
     function updateUIFromSettings(settings) {
       if (!settings) return;
-      
+
       appState.currentTheme = settings.theme;
       appState.currentLanguage = settings.language;
       appState.includeBg = settings.includeBg;
       appState.autoDetect = settings.autoDetect !== undefined ? settings.autoDetect : true;
-      
+
       // Update UI elements
       const themeDropdown = document.getElementById('theme-dropdown');
       const languageDropdown = document.getElementById('language-dropdown');
       const includeBgCheckbox = document.getElementById('include-bg');
       const autoDetectCheckbox = document.getElementById('auto-detect');
-      
+
       themeDropdown.value = settings.theme;
       languageDropdown.value = settings.language;
       includeBgCheckbox.checked = settings.includeBg;
       autoDetectCheckbox.checked = appState.autoDetect;
-      
+
       // Set language dropdown disabled state based on auto-detect setting
       languageDropdown.disabled = appState.autoDetect;
-      
+
       // Update visual styles for disabled state
       if (appState.autoDetect) {
         languageDropdown.classList.add('opacity-40', 'cursor-not-allowed');
@@ -681,13 +681,13 @@
     async function handlePluginMessage(event) {
       const msg = event.data.pluginMessage;
       if (!msg) return;
-      
+
       switch (msg.type) {
         case 'process-nodes':
           // Process multiple nodes (auto mode)
           await processNodes(msg.nodes, msg.settings);
           break;
-          
+
         case 'code':
           // Display code from selection
           if (msg.settings) {
@@ -697,20 +697,20 @@
             appState.autoDetect = msg.autoDetect;
             document.getElementById('auto-detect').checked = msg.autoDetect;
           }
-          
+
           await highlightCode(msg.content, msg.language);
-          
+
           if (msg.autoRun) {
             applyColors();
           }
           break;
-          
+
         case 'no-selection':
           // Show empty state
-          document.getElementById('code-container').innerHTML = 
+          document.getElementById('code-container').innerHTML =
             '<p class="empty-state">ℹ️ Please select at least one text layer</p>';
           break;
-          
+
         case 'loadSettings':
           // Load saved settings
           if (msg.settings) {
@@ -718,19 +718,19 @@
             changeTheme(msg.settings.theme);
           }
           break;
-          
+
         case 'detectedLanguage':
           // A language was detected based on current content
           if (msg.language && msg.content) {
             // Update language dropdown to match detected language
             document.getElementById('language-dropdown').value = msg.language;
             appState.currentLanguage = msg.language;
-            
+
             // Apply highlighting with the detected language
             await highlightCode(msg.content, msg.language);
           }
           break;
-          
+
         case 'init':
           // Plugin initialization
           break;
@@ -744,26 +744,26 @@
       try {
         // Load Shiki
         await loadShiki();
-        
+
         // Set up event listeners
-        document.getElementById('theme-dropdown').addEventListener('change', e => 
+        document.getElementById('theme-dropdown').addEventListener('change', e =>
           changeTheme(e.target.value));
-          
-        document.getElementById('language-dropdown').addEventListener('change', e => 
+
+        document.getElementById('language-dropdown').addEventListener('change', e =>
           changeLanguage(e.target.value));
-          
-        document.getElementById('apply-button').addEventListener('click', 
+
+        document.getElementById('apply-button').addEventListener('click',
           applyColors);
-          
-        document.getElementById('include-bg').addEventListener('change', e => 
+
+        document.getElementById('include-bg').addEventListener('change', e =>
           toggleBackground(e.target.checked));
-          
-        document.getElementById('auto-detect').addEventListener('change', e => 
+
+        document.getElementById('auto-detect').addEventListener('change', e =>
           toggleAutoDetect(e.target.checked));
-        
+
         // Register message handler
         window.onmessage = handlePluginMessage;
-        
+
         // Load settings from plugin
         parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
       } catch (error) {
