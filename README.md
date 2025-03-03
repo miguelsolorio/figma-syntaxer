@@ -24,6 +24,22 @@ Syntaxer is a Figma plugin that allows you to color your text like syntax highli
 4. Select a language
 5. Click "Apply Highlighting"
 
+### Auto Apply Syntax
+
+You can use the "Auto Apply Syntax" command to apply syntax highlighting with your saved settings.
+
+### Auto Language Detection
+
+The plugin can automatically detect the language of your code. Toggle the "Auto-detect" option to let the plugin choose the language for you.
+
+### Layer Name Language Override
+
+You can force a specific language by naming your text layer with a `#language` prefix, for example:
+- `#python` - Forces Python highlighting
+- `#js` - Forces JavaScript highlighting
+
+This override works even when auto-detection is enabled and takes precedence over other language selection methods. It's especially useful when working with multiple text layers that use different languages.
+
 ## Supported Languages
 
 Syntaxer supports a wide range of programming languages, including but not limited to:
@@ -246,6 +262,37 @@ If you want to modify or contribute to the plugin:
 3. Make your changes in the `code.ts` file
 4. Compile TypeScript to JavaScript: `npm run build`
 5. Load the plugin in Figma by selecting "Plugins" > "Development" > "Import plugin from manifest..."
+
+### Theme and Shiki Bundling
+
+The plugin bundles Shiki and all themes locally to avoid network requests. The bundling process happens in three steps:
+
+1. Download Shiki library: `npm run download-shiki`
+2. Download themes: `npm run download-themes`
+3. Process UI with theme scripts: `npm run process-ui`
+
+Or run all steps at once with: `npm run prepare-assets`
+
+These steps are automatically run before each build via the `prebuild` script.
+
+### Adding a new theme
+
+1. Add the theme name to the themes list in:
+   - `scripts/download-themes.js`
+   - `scripts/process-ui.js`
+   - Add it to the dropdown in `ui.html`
+
+2. Run `npm run prepare-assets` to download and process the new theme
+
+### Development workflow
+
+During development, you can use:
+
+```bash
+npm run watch
+```
+
+This will watch for file changes and automatically rebuild the plugin.
 
 ## Feedback and Contributions
 

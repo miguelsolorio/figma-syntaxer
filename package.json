@@ -7,7 +7,12 @@
     "build": "tsc -p tsconfig.json",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch",
+    "download-themes": "node scripts/download-themes.js",
+    "download-shiki": "node scripts/download-shiki.js",
+    "process-ui": "node scripts/process-ui.js",
+    "prepare-assets": "npm run download-shiki && npm run download-themes && npm run process-ui",
+    "prebuild": "npm run prepare-assets"
   },
   "author": "",
   "license": "",

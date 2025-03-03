@@ -1,0 +1,47 @@
+{
+  "name": "sample-theme",
+  "tokenColors": [
+    {
+      "scope": ["comment", "punctuation.definition.comment"],
+      "settings": {
+        "foreground": "#808080"
+      }
+    },
+    {
+      "scope": ["string", "punctuation.definition.string"],
+      "settings": {
+        "foreground": "#a31515"
+      }
+    },
+    {
+      "scope": ["constant.numeric"],
+      "settings": {
+        "foreground": "#098658"
+      }
+    },
+    {
+      "scope": ["keyword"],
+      "settings": {
+        "foreground": "#0000ff"
+      }
+    },
+    {
+      "scope": ["entity.name.function"],
+      "settings": {
+        "foreground": "#795e26"
+      }
+    }
+  ],
+  "colors": {
+    "editor.background": "#FFFFFF",
+    "editor.foreground": "#000000"
+  },
+  "semanticHighlighting": true,
+  "semanticTokenColors": {
+    "property": "#001080",
+    "function": "#795e26",
+    "variable": "#001080",
+    "parameter": "#001080",
+    "enumMember": "#001080"
+  }
+}

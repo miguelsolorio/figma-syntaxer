@@ -1,4 +1,4 @@
-<!-- DOCTYPE html -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -115,14 +115,22 @@
           <option value="swift">Swift</option>
         </optgroup>
 
+        <!-- Data & Markup Languages -->
+        <optgroup label="Data & Markup">
+          <option value="json">JSON</option>
+          <option value="yaml">YAML</option>
+          <option value="markdown">Markdown</option>
+          <option value="xml">XML</option>
+          <option value="toml">TOML</option>
+        </optgroup>
+
         <!-- Other Languages -->
         <optgroup label="Other">
           <option value="bash">Bash</option>
           <option value="sql">SQL</option>
-          <option value="json">JSON</option>
-          <option value="xml">XML</option>
-          <option value="yaml">YAML</option>
-          <option value="markdown">Markdown</option>
+          <option value="graphql">GraphQL</option>
+          <option value="dockerfile">Dockerfile</option>
+          <option value="shellscript">Shell Script</option>
         </optgroup>
       </select>
 
@@ -150,138 +158,89 @@
     </div>
   </div>
 
-  <!-- Loading indicator -->
-  <div id="loading-indicator" class="hidden fixed top-0 left-0 w-full h-1 bg-blue-500" style="z-index: 1000;">
-    <div class="h-full bg-blue-600 animate-pulse" style="width: 30%;"></div>
-  </div>
-
-  <!-- First load Shiki loader utility -->
-  <script src="./utils/shikiLoader.js"></script>
-
-  <!-- Then load Shiki from CDN -->
-  <script src="./utils/shiki.js"></script>
-
-  <!-- Load theme data through script -->
+  <!-- Basic Highlighter Implementation -->
   <script>
-    // Define themes to load
-    const themesToLoad = [
-      'light-plus', 'dark-plus', 'github-light', 'github-dark',
-      'material-theme', 'nord', 'dracula', 'monokai'
-    ];
-
-    // Function to load a script
-    function loadScript(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = (e) => {
-          console.warn(`Failed to load script: ${src}`, e);
-          resolve(); // Resolve anyway to prevent blocking other theme loads
-        };
-        document.head.appendChild(script);
-      });
-    }
-
-    // Show loading indicator
-    document.getElementById('loading-indicator').classList.remove('hidden');
-
-    // Load all themes in parallel
-    Promise.all(themesToLoad.map(theme =>
-      loadScript(`./utils/themes/${theme}.js`)
-    )).then(() => {
-      console.log('Themes loaded successfully');
-      // Hide loading indicator
-      document.getElementById('loading-indicator').classList.add('hidden');
-    }).catch(err => {
-      console.warn('Error loading themes:', err);
-      // Hide loading indicator even on error
-      document.getElementById('loading-indicator').classList.add('hidden');
-    });
-  </script>
-
-  <!-- Fallback highlighter in case Shiki fails to load -->
-  <script>
-    // Create a minimal replacement for Shiki if not already loaded
-    window.shiki = window.shiki || {};
-    if (!window.shiki.getHighlighter) {
-      console.warn('Shiki not loaded, using fallback highlighter');
-      window.shiki.getHighlighter = async function() {
+    // Create a minimal replacement for Shiki that works without external dependencies
+    window.shiki = {
+      getHighlighter: async function() {
         return {
           codeToHtml: function(code, options) {
             const lang = options?.lang || 'plaintext';
-
+            
             // Basic HTML escaping
             let escapedCode = code
               .replace(/&/g, "&amp;")
               .replace(/</g, "&lt;")
               .replace(/>/g, "&gt;");
-
+            
             // Apply very basic syntax highlighting based on language
             if (lang === 'javascript' || lang === 'typescript' || lang === 'jsx' || lang === 'tsx') {
               // Keywords
               escapedCode = escapedCode.replace(
-                /\b(const|let|var|function|return|if|else|for|while|class|import|export|from|async|await)\b/g,
+                /\b(const|let|var|function|return|if|else|for|while|class|import|export|from|async|await)\b/g, 
                 '<span style="color: blue;">$1</span>'
               );
-
+              
               // Strings
               escapedCode = escapedCode.replace(
-                /(".*?"|'.*?'|`.*?`)/g,
+                /(".*?"|'.*?'|`.*?`)/g, 
                 '<span style="color: #a31515;">$1</span>'
               );
-
+              
               // Comments
               escapedCode = escapedCode.replace(
-                /\/\/.*$/gm,
+                /(\/\/.*$|\/\*[\s\S]*?\*\/)/gm, 
                 '<span style="color: green;">$&</span>'
               );
-
+              
               // Numbers
               escapedCode = escapedCode.replace(
-                /\b(\d+)\b/g,
+                /\b(\d+)\b/g, 
                 '<span style="color: #098658;">$1</span>'
               );
-            }
+            } 
             else if (lang === 'python') {
               // Keywords
               escapedCode = escapedCode.replace(
-                /\b(def|class|import|from|return|if|else|for|while|with|as|try|except|finally)\b/g,
+                /\b(def|class|import|from|return|if|else|for|while|with|as|try|except|finally)\b/g, 
                 '<span style="color: blue;">$1</span>'
               );
-
+              
               // Strings
               escapedCode = escapedCode.replace(
-                /(".*?"|'.*?')/g,
+                /(".*?"|'.*?')/g, 
                 '<span style="color: #a31515;">$1</span>'
               );
-
+              
               // Comments
               escapedCode = escapedCode.replace(
-                /#.*$/gm,
+                /(#.*$)/gm, 
                 '<span style="color: green;">$&</span>'
               );
-
+              
               // Numbers
               escapedCode = escapedCode.replace(
-                /\b(\d+)\b/g,
+                /\b(\d+)\b/g, 
                 '<span style="color: #098658;">$1</span>'
               );
             }
-
+            
             // Return HTML
             return `<pre class="shiki" style="background-color: white;"><code>${escapedCode}</code></pre>`;
           }
         };
-      };
-    }
-
-    // Create no-op function for theme registration if not defined
-    window.registerTheme = window.registerTheme || function(name, data) {};
+      }
+    };
+    
+    // Create no-op function for theme registration
+    window.registerTheme = function(name, data) {};
   </script>
-
+  
   <!-- Main Application Script -->
   <script>
+    /**
+     * Core application state
+     */
     const appState = {
       currentTheme: 'light-plus',
       currentLanguage: 'python',
@@ -289,13 +248,19 @@
       autoDetect: true
     };
 
+    /**
+     * Sanitize HTML to prevent XSS
+     */
     function escapeHtml(unsafe) {
       return unsafe
         .replace(/&/g, "&amp;")
-        .replace(/<//g, "&lt;")
+        .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
     }
 
+    /**
+     * Save user settings to plugin storage
+     */
     function saveSettings() {
       const settings = {
         theme: appState.currentTheme,
@@ -306,38 +271,31 @@
       parent.postMessage({ pluginMessage: { type: 'saveSettings', settings } }, '*');
     }
 
+    /**
+     * Highlight code with current settings
+     */
     async function highlightCode(code, language = appState.currentLanguage) {
       try {
-        // Show loading indicator for slow operations
-        document.getElementById('loading-indicator').classList.remove('hidden');
-
         // Process language declaration if present
         if (code.trim().startsWith('$')) {
           code = code.substring(code.indexOf('\n') + 1);
         }
-
+  
         // Update current language
         const previousLanguage = appState.currentLanguage;
         appState.currentLanguage = language || appState.currentLanguage;
-
+  
         // Get the current theme
         const currentTheme = document.getElementById('theme-dropdown').value;
-
-        // Get the highlighter
-        let highlighter;
-        try {
-          // Use the getShikiHighlighter function defined in shikiLoader.js
-          highlighter = await window.getShikiHighlighter();
-        } catch (error) {
-          console.error('Failed to get Shiki highlighter:', error);
-          throw error;
-        }
-
-        // Apply syntax highlighting
-        const highlightedCode = highlighter.codeToHtml(code, {
-          lang: appState.currentLanguage,
-          theme: currentTheme
+        
+        // Get the highlighter directly from window.shiki
+        const highlighter = await window.shiki.getHighlighter({
+          theme: currentTheme,
+          langs: [appState.currentLanguage]
         });
+  
+        // Apply syntax highlighting
+        const highlightedCode = highlighter.codeToHtml(code, { lang: appState.currentLanguage });
 
         // Update UI
         const codeContainer = document.getElementById('code-container');
@@ -353,12 +311,15 @@
       } catch (error) {
         console.error('Error highlighting code:', error);
         displayError('Failed to highlight code. Please try again.');
-      } finally {
-        // Always hide loading indicator
-        document.getElementById('loading-indicator').classList.add('hidden');
       }
     }
 
+    /**
+     * Shows a notification when language is auto-detected or determined from layer name
+     * Shows only one notification at a time
+     * @param language The detected language
+     * @param isFromLayerName Whether the language was detected from layer name
+     */
     function showLanguageDetectionNotice(language, isFromLayerName = false) {
       const languageName = document.querySelector(`#language-dropdown option[value="${language}"]`)?.textContent || language;
 
@@ -393,7 +354,7 @@
         </div>
       `;
 
-      // Add to the body
+      // Add to the body instead of before code container
       document.body.appendChild(notification);
 
       // Auto-remove after 5 seconds
@@ -404,31 +365,49 @@
       }, 5000);
     }
 
+    /**
+     * Display error message in code container
+     */
     function displayError(message) {
       const codeContainer = document.getElementById('code-container');
       codeContainer.innerHTML = `<p class="empty-state">⚠️ ${message}</p>`;
     }
 
+    /**
+     * Change syntax highlighting theme
+     */
     async function changeTheme(theme) {
       try {
-        appState.currentTheme = theme;
+        // Get a highlighter with the selected theme
+        const highlighter = await window.shiki.getHighlighter({
+          theme: theme,
+          langs: [appState.currentLanguage]
+        });
 
-        // Refresh current code with new theme
+        // Apply to current code
         const codeElement = document.querySelector('#code-container pre code');
         if (codeElement) {
           const code = codeElement.textContent;
-          await highlightCode(code, appState.currentLanguage);
+          
+          // Apply syntax highlighting - we know this will work with our implementation
+          const highlightedCode = highlighter.codeToHtml(code, { lang: appState.currentLanguage });
+          
+          document.getElementById('code-container').innerHTML = highlightedCode;
 
           // Notify plugin of theme change
           parent.postMessage({ pluginMessage: { type: 'themeChanged', theme } }, '*');
         }
 
+        appState.currentTheme = theme;
         saveSettings();
       } catch (error) {
         console.error('Error changing theme:', error);
       }
     }
 
+    /**
+     * Change language for syntax highlighting
+     */
     function changeLanguage(language) {
       appState.currentLanguage = language;
 
@@ -441,11 +420,17 @@
       saveSettings();
     }
 
+    /**
+     * Toggle background setting
+     */
     function toggleBackground(include) {
       appState.includeBg = include;
       saveSettings();
     }
 
+    /**
+     * Toggle auto-detect setting
+     */
     function toggleAutoDetect(enabled) {
       appState.autoDetect = enabled;
 
@@ -464,7 +449,7 @@
         languageDropdown.classList.remove('opacity-40', 'cursor-not-allowed');
       }
 
-      // Notify the plugin of this change
+      // Immediately notify the plugin of this change, sending the current code for re-detection
       parent.postMessage({
         pluginMessage: {
           type: 'toggleAutoDetect',
@@ -476,6 +461,9 @@
       saveSettings();
     }
 
+    /**
+     * Extract color data from syntax-highlighted code
+     */
     function extractColorData(element, isFirstLine, hasLanguageDeclaration) {
       const colorData = [];
 
@@ -505,6 +493,9 @@
       return colorData;
     }
 
+    /**
+     * Apply syntax highlighting to Figma text layers
+     */
     function applyColors() {
       const codeElement = document.querySelector('#code-container pre');
       if (!codeElement) {
@@ -533,6 +524,9 @@
       }, '*');
     }
 
+    /**
+     * Process multiple nodes for auto syntax mode
+     */
     async function processNodes(nodes, settings) {
       // Apply settings
       updateUIFromSettings(settings);
@@ -557,8 +551,8 @@
         } catch (error) {
           console.error('Error processing node:', error);
           // Create basic color data as fallback
-          processedNodes.push({
-            colorData: [{ text: node.content, color: '#000000' }],
+          processedNodes.push({ 
+            colorData: [{ text: node.content, color: '#000000' }], 
             hasLanguageDeclaration: node.content.trim().startsWith('$')
           });
         }
@@ -576,10 +570,16 @@
       }, '*');
     }
 
+    /**
+     * Check if the current layer has a language defined in its name
+     */
     function hasLanguageInLayerName(layerName) {
       return layerName && layerName.startsWith('#');
     }
 
+    /**
+     * Update UI controls from settings object
+     */
     function updateUIFromSettings(settings) {
       if (!settings) return;
 
@@ -610,6 +610,9 @@
       }
     }
 
+    /**
+     * Handle messages from the plugin
+     */
     async function handlePluginMessage(event) {
       const msg = event.data.pluginMessage;
       if (!msg) return;
@@ -625,26 +628,27 @@
           if (msg.settings) {
             updateUIFromSettings(msg.settings);
           } else if (msg.autoDetect !== undefined) {
-            // Update autoDetect setting if provided
+            // Update just the autoDetect setting if provided
             appState.autoDetect = msg.autoDetect;
             document.getElementById('auto-detect').checked = msg.autoDetect;
           }
 
           // Get language dropdown element
           const languageDropdown = document.getElementById('language-dropdown');
-
-          // Update language dropdown
+          
+          // Update language dropdown to match the detected/preferred language
+          // This ensures the UI language selector matches what was detected from #lang
           if (msg.language) {
             languageDropdown.value = msg.language;
             appState.currentLanguage = msg.language;
           }
-
-          // If language was determined from layer name (#lang)
+          
+          // If language was determined from layer name, disable language selector regardless of auto-detect
           if (msg.isLanguageFromLayerName) {
             languageDropdown.disabled = true;
             languageDropdown.classList.add('opacity-40', 'cursor-not-allowed');
-
-            // Show a notification that language is from layer name
+            
+            // Show a notification that language is determined by layer name
             showLanguageDetectionNotice(msg.language, true);
           } else {
             // Normal behavior - only disable if auto-detect is on
@@ -693,8 +697,13 @@
       }
     }
 
-    function initPlugin() {
+    /**
+     * Initialize the plugin UI
+     */
+    async function initPlugin() {
       try {
+        console.log('Initializing plugin...');
+
         // Set up event listeners
         document.getElementById('theme-dropdown').addEventListener('change', e =>
           changeTheme(e.target.value));
@@ -714,26 +723,16 @@
         // Register message handler
         window.onmessage = handlePluginMessage;
 
-        // Initialize the plugin
+        // Load settings from plugin
         parent.postMessage({ pluginMessage: { type: 'init' } }, '*');
       } catch (error) {
-        console.error('Error initializing plugin:', error);
-        displayError('Failed to initialize. Please try reloading.');
+        console.error('Failed to initialize plugin:', error);
+        displayError('Failed to load syntax highlighter. Please try reloading.');
       }
     }
 
     // Initialize plugin when document is ready
     window.addEventListener('DOMContentLoaded', initPlugin);
-
-    // Listen for Shiki load events
-    window.addEventListener('shikiLoaded', () => {
-      console.log('Shiki loaded event received');
-    });
-
-    window.addEventListener('shikiLoadFailed', () => {
-      console.warn('Shiki load failed event received');
-      // We already have a fallback in place via getShikiHighlighter
-    });
   </script>
 </body>
 </html>

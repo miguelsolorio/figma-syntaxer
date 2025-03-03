@@ -3,6 +3,13 @@
 *.log.*
 node_modules
 
+# Build output
 out/
 dist/
 code.js
+utils/themes/
+utils/themes.js
+utils/shiki.js
+
+# Auto-generated files
+ui.html.processed
