@@ -208,7 +208,9 @@ Syntaxer supports a wide range of programming languages, including but not limit
 
 Choose from popular [VS Code themes](https://shiki.style/themes), such as:
 
+- Light 2026
 - Light+
+- Dark 2026
 - Dark+
 - Dracula
 - Dracula Soft
